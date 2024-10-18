@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { readonly children: React.ReactNode }) {
   return (
     <html lang="en" className={cn(inter.variable, lexend.variable, manrope.variable, "bg-bg-primary text-t-primary")}>
-      <body className="mx-auto min-h-svh w-full max-w-8xl flex-1">
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

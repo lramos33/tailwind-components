@@ -28,6 +28,10 @@ const config: Config = {
         "2xl": "1440px",
       },
 
+      spacing: {
+        18: "4.5rem",
+      },
+
       colors: {
         primary: {
           25: "var(--primary-25)",
