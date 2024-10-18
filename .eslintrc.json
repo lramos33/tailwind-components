@@ -58,16 +58,6 @@
       }
     ],
 
-    // Enforce a convention in the order of import statements
-    "import/order": [
-      "error",
-      {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-        "newlines-between": "always",
-        "alphabetize": { "order": "asc", "caseInsensitive": true }
-      }
-    ],
-
     // Ensure consistent use of file extension within the import path
     "import/extensions": [
       "error",
