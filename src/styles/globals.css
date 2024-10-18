@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-lexend);
+}
+
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline-style: solid;
+  outline-color: #a5b4fc; /* indigo 300 */
+  outline-width: 2px;
+  outline-offset: 1px;
+}
+
+.danger-outline {
+  outline-color: #f87171; /* red 300 */
+}
