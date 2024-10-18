@@ -94,7 +94,7 @@
     ],
 
     // Enforce a consistent order for Tailwind CSS classes
-    "tailwindcss/classnames-order": "error",
+    "tailwindcss/classnames-order": "warn",
 
     // Warn about custom class names that are not defined in the Tailwind config
     "tailwindcss/no-custom-classname": "warn",
