@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { ThemeProvider } from "next-themes";
 
 import { useConfig } from "@/modules/theme/hooks/use-config";
 
@@ -19,5 +20,9 @@ export function Providers({ children }: IProps) {
     if (config.colorTheme) document.body.classList.add(`theme-${config.colorTheme}`);
   }, [config]);
 
-  return <>{children}</>;
+  return (
+    <ThemeProvider attribute="class" defaultTheme="light">
+      {children}
+    </ThemeProvider>
+  );
 }

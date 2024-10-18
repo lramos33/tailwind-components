@@ -3,9 +3,10 @@ import "@/styles/themes.css";
 
 import type { Viewport } from "next";
 
-import { Providers } from "@/contexts/providers";
-import { inter, lexend, manrope } from "@/styles/fonts";
 import { cn } from "@/utils/cn";
+
+import { inter, lexend, manrope } from "@/styles/fonts";
+import { Providers } from "@/contexts/providers";
 
 export const viewport: Viewport = {
   width: "device-width",

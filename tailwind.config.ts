@@ -28,11 +28,6 @@ const config: Config = {
         "2xl": "1440px",
       },
 
-      spacing: {
-        4.5: "1.125rem" /* 18px */,
-        5.5: "1.375rem" /* 22px */,
-      },
-
       colors: {
         primary: {
           25: "var(--primary-25)",
@@ -47,6 +42,21 @@ const config: Config = {
           800: "var(--primary-800)",
           900: "var(--primary-900)",
           950: "var(--primary-950)",
+        },
+
+        gray: {
+          25: "var(--gray-25)",
+          50: "var(--gray-50)",
+          100: "var(--gray-100)",
+          200: "var(--gray-200)",
+          300: "var(--gray-300)",
+          400: "var(--gray-400)",
+          500: "var(--gray-500)",
+          600: "var(--gray-600)",
+          700: "var(--gray-700)",
+          800: "var(--gray-800)",
+          900: "var(--gray-900)",
+          950: "var(--gray-950)",
         },
 
         b: {
