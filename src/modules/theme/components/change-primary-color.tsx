@@ -6,9 +6,17 @@ import { Check } from "@/components/icons";
 import { Button } from "@/components/button";
 
 import { cn } from "@/utils/cn";
+import { useEffect, useState } from "react";
 
 export function ChangePrimaryColor() {
+  const [canRender, setCanRender] = useState(false);
   const [config, setConfig] = useConfig();
+
+  useEffect(() => {
+    if (window) setCanRender(true);
+  }, []);
+
+  if (!canRender) return null;
 
   return (
     <div className="flex">
