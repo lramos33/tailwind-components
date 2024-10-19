@@ -1,69 +1,108 @@
-import { type ButtonHTMLAttributes, forwardRef } from "react";
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/utils/cn";
-import Link from "next/link";
 
-// ================================== //
+import { cn } from "@/utils/cn";
 
 const buttonVariants = cva(
-  cn("flex h-9 items-center justify-center rounded-lg", "disabled:cursor-not-allowed disabled:border-none disabled:bg-slate-200 disabled:text-quaternary"),
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
-      format: {
-        icon: "w-9 text-xl",
-        default: "gap-2 px-4 text-sm font-semibold",
+      size: {
+        sm: "h-9 rounded-lg px-3 text-sm [&_svg]:size-5",
+        md: "h-10 rounded-lg px-3.5 text-sm [&_svg]:size-5",
+        lg: "h-11 rounded-lg px-4 text-base [&_svg]:size-5",
+        xl: "h-12 rounded-lg px-4.5 text-base [&_svg]:size-6",
+        "2xl": "h-14 rounded-xl px-5.5 text-lg [&_svg]:size-7",
+        "icon-sm": "size-9 rounded-lg [&_svg]:size-5",
+        "icon-md": "size-10 rounded-lg [&_svg]:size-5",
+        "icon-lg": "size-11 rounded-lg [&_svg]:size-5",
+        "icon-xl": "size-12 rounded-lg [&_svg]:size-6",
+        "icon-2xl": "size-14 rounded-xl [&_svg]:size-7",
       },
       variant: {
-        ghost: "hover:bg-bg-tertiary",
-        primary: "bg-primary-600 text-white hover:bg-primary-700",
-        red: "bg-red-600 text-white hover:bg-red-700 danger",
-        green: "bg-green-600 text-white hover:bg-green-700",
-        outline: "border bg-white font-medium hover:bg-bg-tertiary",
-        unstyled: "size-fit rounded-none p-0 text-base font-normal",
-        link: "px-0 hover:underline disabled:bg-transparent hover:disabled:no-underline",
+        primary: "bg-primary-600 text-white hover:bg-primary-700 disabled:bg-bg-disabled disabled:text-t-disabled",
+        destructive: "bg-error-600 text-white hover:bg-error-700 disabled:bg-bg-disabled disabled:text-t-disabled",
+        outline: "border border-b-primary hover:bg-bg-primary-hover disabled:text-t-disabled disabled:opacity-50 disabled:hover:bg-transparent",
+        ghost: "hover:bg-bg-primary-hover disabled:text-t-disabled disabled:opacity-50 disabled:hover:bg-transparent",
+        link: "h-fit rounded-sm px-0 hover:underline disabled:text-t-disabled disabled:opacity-50 disabled:hover:no-underline",
       },
     },
     defaultVariants: {
       variant: "primary",
-      format: "default",
+      size: "md",
     },
   }
 );
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
-  readonly href?: string;
-  readonly asIcon?: boolean;
-  readonly isExternal?: boolean;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+  readonly asChild?: boolean;
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, href, variant, asIcon, className, isExternal, disabled, format = "default", ...props }, ref) => {
-    if (href) {
-      return (
-        <Link
-          href={href}
-          className={cn(
-            buttonVariants({ variant, format: asIcon ? "icon" : format }),
-            className,
-            disabled && "text-quaternary cursor-not-allowed border-none bg-slate-200 hover:bg-slate-200"
-          )}
-          {...(isExternal && { target: "_blank" })}
-        >
-          {children}
-        </Link>
-      );
-    }
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
+  const buttonClasses = cn(buttonVariants({ variant, size, className }));
 
-    return (
-      <button {...props} ref={ref} disabled={disabled} className={cn(buttonVariants({ variant, format: asIcon ? "icon" : format }), className)}>
-        {children}
-      </button>
-    );
-  }
-);
+  return <Comp className={buttonClasses} ref={ref} {...props} />;
+});
 
 Button.displayName = "Button";
 
 // ================================== //
 
-export { Button };
+const buttonGroupVariants = cva("inline-flex", {
+  variants: {
+    variant: {
+      primary: "",
+      destructive: "",
+      outline: "",
+      ghost: "",
+    },
+    size: {
+      sm: "",
+      md: "",
+      lg: "",
+      xl: "",
+      "2xl": "",
+    },
+  },
+  defaultVariants: {
+    variant: "outline",
+    size: "md",
+  },
+});
+
+interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof buttonGroupVariants> {
+  readonly children: React.ReactNode;
+}
+
+const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(({ className, variant = "outline", size = "md", children, ...props }, ref) => {
+  const groupClasses = cn(buttonGroupVariants({ variant, size, className }));
+
+  return (
+    <div className={groupClasses} ref={ref} {...props}>
+      {React.Children.map(children, (child, index) => {
+        if (React.isValidElement<ButtonProps>(child) && child.type === Button) {
+          const isIconOnly = React.Children.count(child.props.children) === 1 && React.isValidElement(child.props.children);
+
+          return React.cloneElement(child, {
+            variant,
+            size: isIconOnly && (index === 0 || index === React.Children.count(children) - 1) ? `icon-${size!}` : size,
+            className: cn(
+              child.props.className,
+              "first:rounded-r-none last:rounded-l-none [&:not(:first-child):not(:last-child)]:rounded-none",
+              index !== 0 && "-ml-px"
+            ),
+          });
+        }
+        return child;
+      })}
+    </div>
+  );
+});
+
+ButtonGroup.displayName = "ButtonGroup";
+
+// ================================== //
+
+export { Button, ButtonGroup };
