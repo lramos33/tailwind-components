@@ -32,7 +32,7 @@ const CalendarWeekEvent = React.forwardRef<HTMLDivElement, CalendarWeekEventProp
   const start = parseISO(startDate);
   const end = parseISO(endDate);
   const durationInMinutes = differenceInMinutes(end, start);
-  const heightInPixels = (durationInMinutes / 60) * 96;
+  const heightInPixels = (durationInMinutes / 60) * 96 - 8;
 
   return (
     <div ref={ref} className={calendarWeekEventClasses} style={{ height: `${heightInPixels}px` }} {...props}>
