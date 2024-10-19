@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5757",
+    "dev": "next dev -p 5858",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "turbo": "next dev -p 5757 --turbo",
+    "turbo": "next dev -p 5858 --turbo",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "jotai": "^2.10.1",
+    "lucide-react": "^0.453.0",
     "next": "14.2.15",
     "next-themes": "^0.3.0",
     "react": "^18",
