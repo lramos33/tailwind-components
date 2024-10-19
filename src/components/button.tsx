@@ -43,7 +43,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, va
   const Comp = asChild ? Slot : "button";
   const buttonClasses = cn(buttonVariants({ variant, size, className }));
 
-  return <Comp className={buttonClasses} ref={ref} {...props} />;
+  return <Comp ref={ref} className={buttonClasses} {...props} />;
 });
 
 Button.displayName = "Button";
@@ -80,7 +80,7 @@ const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(({ classN
   const groupClasses = cn(buttonGroupVariants({ variant, size, className }));
 
   return (
-    <div className={groupClasses} ref={ref} {...props}>
+    <div ref={ref} className={groupClasses} {...props}>
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement<ButtonProps>(child) && child.type === Button) {
           const isIconOnly = React.Children.count(child.props.children) === 1 && React.isValidElement(child.props.children);
