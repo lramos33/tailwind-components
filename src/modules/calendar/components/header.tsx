@@ -4,9 +4,9 @@ import { ChevronLeft, ChevronRight, Columns, Grid3X3, List, Plus } from "@/compo
 
 export function Header() {
   return (
-    <div className="flex items-center justify-between border-b px-6 py-5">
+    <div className="flex flex-col gap-4 border-b p-4 md:flex-row md:items-center md:justify-between">
       <div className="flex items-center gap-3">
-        <div className="h-14 w-16 overflow-hidden rounded-lg border">
+        <div className="size-14 overflow-hidden rounded-lg border">
           <p className="flex h-6 items-center justify-center bg-primary-600 text-center text-xs font-semibold text-white">JAN</p>
           <p className="flex items-center justify-center text-lg font-bold">10</p>
         </div>
@@ -18,20 +18,20 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="outline" className="size-6 px-0 [&_svg]:size-4">
+            <Button variant="outline" className="size-6.5 px-0 [&_svg]:size-4.5">
               <ChevronLeft />
             </Button>
 
             <p className="text-sm text-t-tertiary">Jan 1, 2025 - Jan 31, 2025</p>
 
-            <Button variant="outline" className="size-6 px-0 [&_svg]:size-4">
+            <Button variant="outline" className="size-6.5 px-0 [&_svg]:size-4.5">
               <ChevronRight />
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3">
         <ButtonGroup>
           <Button>
             <List />
@@ -49,7 +49,7 @@ export function Header() {
           </Button>
         </ButtonGroup>
 
-        <Button>
+        <Button className="flex-1">
           <Plus />
           Add Event
         </Button>
