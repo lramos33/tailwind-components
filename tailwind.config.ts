@@ -34,6 +34,10 @@ const config: Config = {
         18: "4.5rem",
       },
 
+      divideWidth: {
+        px: "1px",
+      },
+
       colors: {
         primary: {
           25: "var(--primary-25)",
