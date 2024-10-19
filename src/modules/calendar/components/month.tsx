@@ -1,4 +1,3 @@
-import { Event } from "@/modules/calendar/components/event";
 import { cn } from "@/utils/cn";
 
 export function Month() {
@@ -43,11 +42,9 @@ export function Month() {
 
       <div className="grid grid-cols-7">
         {allCells.map(({ day, currentMonth }, index) => (
-          <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 p-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
+          <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 p-1.5 lg:p-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
             <span className={cn("size-6 text-xs font-semibold", !currentMonth && "opacity-50")}>{day}</span>
-            <div className={cn("flex h-[86px] flex-col gap-1", !currentMonth && "opacity-50")}>
-              <Event time="10:00" title="Lorem ipsum dolor sit amet" />
-            </div>
+            <div className={cn("flex h-2 gap-1 sm:h-[86px] sm:flex-col", !currentMonth && "opacity-50")}></div>
             <p className={cn("h-4.5 text-xs font-semibold text-t-quaternary", !currentMonth && "opacity-50")}></p>
           </div>
         ))}
