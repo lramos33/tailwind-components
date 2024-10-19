@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 
 import { inter, lexend, manrope } from "@/styles/fonts";
 import { Providers } from "@/contexts/providers";
+import { BreakpointTag } from "@/components/breakpoint-tag";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -18,7 +19,10 @@ export default function RootLayout({ children }: { readonly children: React.Reac
   return (
     <html lang="en" className={cn(inter.variable, lexend.variable, manrope.variable, "bg-bg-primary text-t-primary")}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <BreakpointTag />
+          {children}
+        </Providers>
       </body>
     </html>
   );
