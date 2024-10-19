@@ -7,9 +7,10 @@ import { formatMonthRange } from "@/utils/date.helper";
 interface HeaderProps {
   readonly currentDate: Date;
   readonly onChangeMonth: (increment: number) => void;
+  readonly setView: (view: "day" | "week" | "month") => void;
 }
 
-export function Header({ currentDate, onChangeMonth }: HeaderProps) {
+export function Header({ currentDate, onChangeMonth, setView }: HeaderProps) {
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const month = monthNames[currentDate.getMonth()];
   const year = currentDate.getFullYear();
@@ -43,17 +44,17 @@ export function Header({ currentDate, onChangeMonth }: HeaderProps) {
 
       <div className="flex items-center justify-between gap-3">
         <ButtonGroup>
-          <Button>
+          <Button onClick={() => setView("day")}>
             <List />
             <span className="hidden xl:block">Day</span>
           </Button>
 
-          <Button>
+          <Button onClick={() => setView("week")}>
             <Columns />
             <span className="hidden xl:block">Week</span>
           </Button>
 
-          <Button>
+          <Button onClick={() => setView("month")}>
             <Grid3X3 />
             <span className="hidden xl:block">Month</span>
           </Button>

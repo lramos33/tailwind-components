@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Header } from "@/modules/calendar/components/header";
 import { Month } from "@/modules/calendar/components/month";
+import { Week } from "@/modules/calendar/components/week";
 
 interface Event {
   id: number;
@@ -121,6 +122,7 @@ const MOCK_EVENTS: Array<Event> = [
 ];
 
 export default function Page() {
+  const [view, setView] = useState<"day" | "week" | "month">("week");
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const changeMonth = (increment: number) => {
@@ -133,8 +135,9 @@ export default function Page() {
 
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
-      <Header currentDate={currentDate} onChangeMonth={changeMonth} />
-      <Month currentDate={currentDate} events={MOCK_EVENTS} />
+      <Header currentDate={currentDate} onChangeMonth={changeMonth} setView={setView} />
+      {view === "month" && <Month currentDate={currentDate} events={MOCK_EVENTS} />}
+      {view === "week" && <Week currentDate={currentDate} events={MOCK_EVENTS} />}
     </div>
   );
 }
