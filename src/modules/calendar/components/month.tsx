@@ -40,7 +40,7 @@ export function Month() {
         ))}
       </div>
 
-      <div className="grid grid-cols-7">
+      <div className="grid grid-cols-7 border-b lg:border-b-0">
         {allCells.map(({ day, currentMonth }, index) => (
           <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 p-1.5 lg:p-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
             <span className={cn("size-6 text-xs font-semibold", !currentMonth && "opacity-50")}>{day}</span>
