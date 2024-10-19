@@ -86,8 +86,12 @@
     // Enforce a consistent order for Tailwind CSS classes
     "tailwindcss/classnames-order": "warn",
 
-    // Warn about custom class names that are not defined in the Tailwind config
-    "tailwindcss/no-custom-classname": "warn",
+    "tailwindcss/no-custom-classname": [
+      "warn",
+      {
+        "callees": ["cn", "clsx", "twMerge", "cva"]
+      }
+    ],
 
     // Prevent using contradicting Tailwind CSS classes together
     "tailwindcss/no-contradicting-classname": "error"
