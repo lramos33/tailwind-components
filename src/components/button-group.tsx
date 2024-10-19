@@ -30,16 +30,18 @@ export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement>, 
   readonly children: React.ReactNode;
 }
 
-const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(({ className, variant = "outline", size, children, ...props }, ref) => {
+const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(({ className, variant = "outline", size = "md", children, ...props }, ref) => {
   const groupClasses = cn(buttonGroupVariants({ variant, size, className }));
 
   return (
     <div className={groupClasses} ref={ref} {...props}>
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement<ButtonProps>(child) && child.type === Button) {
+          const isIconOnly = React.Children.count(child.props.children) === 1 && React.isValidElement(child.props.children);
+
           return React.cloneElement(child, {
             variant,
-            size,
+            size: isIconOnly && (index === 0 || index === React.Children.count(children) - 1) ? `icon-${size!}` : size,
             className: cn(
               child.props.className,
               "first:rounded-r-none last:rounded-l-none [&:not(:first-child):not(:last-child)]:rounded-none",
