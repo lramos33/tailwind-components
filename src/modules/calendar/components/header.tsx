@@ -14,41 +14,38 @@ export function Header() {
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
             <p className="text-lg font-semibold">January 2025</p>
-
             <Badge>Week 1</Badge>
           </div>
 
-          <p className="text-sm text-t-tertiary">Jan 1, 2025 - Jan 31, 2025</p>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" className="size-6 px-0 [&_svg]:size-4">
+              <ChevronLeft />
+            </Button>
+
+            <p className="text-sm text-t-tertiary">Jan 1, 2025 - Jan 31, 2025</p>
+
+            <Button variant="outline" className="size-6 px-0 [&_svg]:size-4">
+              <ChevronRight />
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
         <ButtonGroup>
           <Button>
-            <ChevronLeft />
-          </Button>
-
-          <Button>Jan</Button>
-
-          <Button>
-            <ChevronRight />
-          </Button>
-        </ButtonGroup>
-
-        <ButtonGroup>
-          <Button>
             <List />
-            Day
+            <span className="hidden xl:block">Day</span>
           </Button>
 
           <Button>
             <Columns />
-            Week
+            <span className="hidden xl:block">Week</span>
           </Button>
 
           <Button>
             <Grid3X3 />
-            Month
+            <span className="hidden xl:block">Month</span>
           </Button>
         </ButtonGroup>
 
