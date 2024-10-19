@@ -28,7 +28,7 @@
     // Prevent usage of dangerous JSX props
     "react/no-danger": "error",
 
-    // Prevent multiple component definitions in a single file
+    // Prevent multiple component definitions in a single file, except in /src/components
     "react/no-multi-comp": ["error"],
 
     // Enforce consistent usage of destructuring assignment of props, state, and context
@@ -91,5 +91,13 @@
 
     // Prevent using contradicting Tailwind CSS classes together
     "tailwindcss/no-contradicting-classname": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/components/**/*.{js,jsx,ts,tsx}"],
+      "rules": {
+        "react/no-multi-comp": "off"
+      }
+    }
+  ]
 }
