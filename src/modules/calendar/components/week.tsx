@@ -1,4 +1,4 @@
-import { startOfWeek, addDays, format, addHours, parseISO, isSameDay, differenceInMinutes } from "date-fns";
+import { startOfWeek, addDays, format, addHours, parseISO, isSameDay, differenceInMinutes, areIntervalsOverlapping } from "date-fns";
 import { cn } from "@/utils/cn";
 import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
 
@@ -105,7 +105,24 @@ export function Week({ currentDate, events }: WeekProps) {
 
                 {groupedEvents.map((group, groupIndex) =>
                   group.map(event => {
-                    const style = getEventStyle(event, day, groupIndex, groupedEvents.length);
+                    let style = getEventStyle(event, day, groupIndex, groupedEvents.length);
+
+                    // Check if there are any overlapping events in other groups
+                    const hasOverlap = groupedEvents.some(
+                      (otherGroup, otherIndex) =>
+                        otherIndex !== groupIndex &&
+                        otherGroup.some(otherEvent =>
+                          areIntervalsOverlapping(
+                            { start: parseISO(event.startDate), end: parseISO(event.endDate) },
+                            { start: parseISO(otherEvent.startDate), end: parseISO(otherEvent.endDate) }
+                          )
+                        )
+                    );
+
+                    // If there's no overlap, set the width to 100%
+                    if (!hasOverlap) {
+                      style = { ...style, width: "100%", left: "0%" };
+                    }
 
                     return (
                       <div key={event.id} className="absolute p-1" style={style}>
