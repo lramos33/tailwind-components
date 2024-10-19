@@ -20,29 +20,56 @@ export function Week({ currentDate, events }: WeekProps) {
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => addHours(new Date().setHours(0, 0, 0, 0), i));
 
-  const getEventStyle = (event: Event, day: Date) => {
+  const getEventStyle = (event: Event, day: Date, groupIndex: number, groupSize: number) => {
     const startDate = parseISO(event.startDate);
-    const endDate = parseISO(event.endDate);
     const dayStart = new Date(day.setHours(0, 0, 0, 0));
 
     const eventStart = startDate < dayStart ? dayStart : startDate;
     const startMinutes = differenceInMinutes(eventStart, dayStart);
     const top = (startMinutes / 1440) * 100; // 1440 minutes in a day
 
-    return { top: `${top}%` };
+    const width = 100 / groupSize;
+    const left = groupIndex * width;
+
+    return { top: `${top}%`, width: `${width}%`, left: `${left}%` };
+  };
+
+  const groupEvents = (dayEvents: Event[]) => {
+    const sortedEvents = dayEvents.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
+    const groups: Event[][] = [];
+
+    for (const event of sortedEvents) {
+      const eventStart = parseISO(event.startDate);
+
+      let placed = false;
+      for (const group of groups) {
+        const lastEventInGroup = group[group.length - 1];
+        const lastEventEnd = parseISO(lastEventInGroup.endDate);
+
+        if (eventStart >= lastEventEnd) {
+          group.push(event);
+          placed = true;
+          break;
+        }
+      }
+
+      if (!placed) {
+        groups.push([event]);
+      }
+    }
+
+    return groups;
   };
 
   return (
     <div className="flex">
       {/* Time column */}
       <div className="w-16 border-r">
-        <div className="h-8"></div> {/* Empty cell for alignment */}
+        <div className="h-8"></div>
         {hours.map((hour, index) => (
           <div key={index} className={cn("relative", index === 0 && "border-t")} style={{ height: "96px" }}>
             <div className="absolute -top-3 right-2 flex h-6 items-center">
-              {index !== 0 && ( // Hide text for 12 AM (first hour)
-                <span className="text-xs text-t-quaternary">{format(hour, "h a")}</span>
-              )}
+              {index !== 0 && <span className="text-xs text-t-quaternary">{format(hour, "h a")}</span>}
             </div>
           </div>
         ))}
@@ -63,28 +90,33 @@ export function Week({ currentDate, events }: WeekProps) {
 
         {/* Week body */}
         <div className="grid grid-cols-7 divide-x">
-          {weekDays.map((day, dayIndex) => (
-            <div key={dayIndex} className="relative">
-              {hours.map((hour, hourIndex) => (
-                <div key={hourIndex} className="relative" style={{ height: "96px" }}>
-                  {/* Hour line */}
-                  <div className="absolute inset-x-0 top-0 border-b"></div>
-                  {/* 30-minute line */}
-                  <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-b-tertiary"></div>
-                </div>
-              ))}
-              {events
-                .filter(event => isSameDay(parseISO(event.startDate), day) || isSameDay(parseISO(event.endDate), day))
-                .map(event => {
-                  const style = getEventStyle(event, day);
-                  return (
-                    <div key={event.id} className="absolute inset-x-0 p-1" style={style}>
-                      <CalendarWeekEvent title={event.title} startDate={event.startDate} endDate={event.endDate} variant={event.variant} />
-                    </div>
-                  );
-                })}
-            </div>
-          ))}
+          {weekDays.map((day, dayIndex) => {
+            const dayEvents = events.filter(event => isSameDay(parseISO(event.startDate), day) || isSameDay(parseISO(event.endDate), day));
+            const groupedEvents = groupEvents(dayEvents);
+
+            return (
+              <div key={dayIndex} className="relative">
+                {hours.map((_hour, hourIndex) => (
+                  <div key={hourIndex} className="relative" style={{ height: "96px" }}>
+                    <div className="absolute inset-x-0 top-0 border-b"></div>
+                    <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-b-tertiary"></div>
+                  </div>
+                ))}
+
+                {groupedEvents.map((group, groupIndex) =>
+                  group.map(event => {
+                    const style = getEventStyle(event, day, groupIndex, groupedEvents.length);
+
+                    return (
+                      <div key={event.id} className="absolute p-1" style={style}>
+                        <CalendarWeekEvent title={event.title} startDate={event.startDate} endDate={event.endDate} variant={event.variant} />
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
