@@ -1,3 +1,11 @@
+import { Header } from "@/modules/calendar/components/header";
+import { Month } from "@/modules/calendar/components/month";
+
 export default function Page() {
-  return <div className="m-8 flex flex-1 items-center justify-center bg-orange-100 dark:bg-orange-950">content</div>;
+  return (
+    <div className="h-fit w-full rounded-xl border">
+      <Header />
+      <Month />
+    </div>
+  );
 }
