@@ -7,8 +7,8 @@ export function Header() {
     <div className="flex items-center justify-between border-b px-6 py-5">
       <div className="flex items-center gap-3">
         <div className="h-14 w-16 overflow-hidden rounded-lg border">
-          <p className="flex h-6 items-center justify-center bg-bg-secondary text-center text-xs font-semibold text-t-quaternary">JAN</p>
-          <p className="flex items-center justify-center text-lg font-bold text-primary-600">10</p>
+          <p className="flex h-6 items-center justify-center bg-primary-600 text-center text-xs font-semibold text-white">JAN</p>
+          <p className="flex items-center justify-center text-lg font-bold">10</p>
         </div>
 
         <div className="space-y-0.5">
@@ -28,7 +28,7 @@ export function Header() {
             <ChevronLeft />
           </Button>
 
-          <Button>Today</Button>
+          <Button>Jan</Button>
 
           <Button>
             <ChevronRight />
