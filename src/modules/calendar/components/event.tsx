@@ -1,8 +1,11 @@
+import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const eventStyles = cva("flex items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 py-1 text-xs", {
+import { cn } from "@/utils/cn";
+
+const eventVariants = cva("flex items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 py-1 text-xs", {
   variants: {
-    color: {
+    variant: {
       blue: "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300",
       green: "border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300",
       red: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300",
@@ -12,20 +15,26 @@ const eventStyles = cva("flex items-center justify-between gap-1.5 truncate whit
     },
   },
   defaultVariants: {
-    color: "gray",
+    variant: "blue",
   },
 });
 
-interface EventProps extends VariantProps<typeof eventStyles> {
+interface EventProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof eventVariants> {
   readonly title: string;
   readonly time: string;
 }
 
-export function Event({ title, time, color }: EventProps) {
+const Event = React.forwardRef<HTMLDivElement, EventProps>(({ title, time, variant, className, ...props }, ref) => {
+  const eventClasses = cn(eventVariants({ variant, className }));
+
   return (
-    <div className={eventStyles({ color })}>
+    <div ref={ref} className={eventClasses} {...props}>
       <p className="flex-1 select-none truncate font-semibold">{title}</p>
       <p>{time}</p>
     </div>
   );
-}
+});
+
+Event.displayName = "Event";
+
+export { Event };
