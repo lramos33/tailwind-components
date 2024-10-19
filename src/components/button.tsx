@@ -30,7 +30,7 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: "primary",
-      size: "md",
+      size: "sm",
     },
   }
 );
@@ -68,7 +68,7 @@ const buttonGroupVariants = cva("inline-flex", {
   },
   defaultVariants: {
     variant: "outline",
-    size: "md",
+    size: "sm",
   },
 });
 
@@ -76,7 +76,7 @@ interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement>, Variant
   readonly children: React.ReactNode;
 }
 
-const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(({ className, variant = "outline", size = "md", children, ...props }, ref) => {
+const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(({ className, variant = "outline", size = "sm", children, ...props }, ref) => {
   const groupClasses = cn(buttonGroupVariants({ variant, size, className }));
 
   return (
