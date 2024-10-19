@@ -1,5 +1,6 @@
-import { startOfWeek, addDays, format, addHours } from "date-fns";
+import { startOfWeek, addDays, format, addHours, parseISO, isSameDay, differenceInMinutes } from "date-fns";
 import { cn } from "@/utils/cn";
+import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
 
 interface Event {
   id: number;
@@ -14,10 +15,22 @@ interface WeekProps {
   readonly events: Event[];
 }
 
-export function Week({ currentDate }: WeekProps) {
+export function Week({ currentDate, events }: WeekProps) {
   const weekStart = startOfWeek(currentDate);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => addHours(new Date().setHours(0, 0, 0, 0), i));
+
+  const getEventStyle = (event: Event, day: Date) => {
+    const startDate = parseISO(event.startDate);
+    const endDate = parseISO(event.endDate);
+    const dayStart = new Date(day.setHours(0, 0, 0, 0));
+
+    const eventStart = startDate < dayStart ? dayStart : startDate;
+    const startMinutes = differenceInMinutes(eventStart, dayStart);
+    const top = (startMinutes / 1440) * 100; // 1440 minutes in a day
+
+    return { top: `${top}%` };
+  };
 
   return (
     <div className="flex">
@@ -60,6 +73,16 @@ export function Week({ currentDate }: WeekProps) {
                   <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-b-tertiary"></div>
                 </div>
               ))}
+              {events
+                .filter(event => isSameDay(parseISO(event.startDate), day) || isSameDay(parseISO(event.endDate), day))
+                .map(event => {
+                  const style = getEventStyle(event, day);
+                  return (
+                    <div key={event.id} className="absolute inset-x-0 p-1" style={style}>
+                      <CalendarWeekEvent title={event.title} startDate={event.startDate} endDate={event.endDate} variant={event.variant} />
+                    </div>
+                  );
+                })}
             </div>
           ))}
         </div>
