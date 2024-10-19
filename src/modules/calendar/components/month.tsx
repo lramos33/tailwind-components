@@ -1,12 +1,22 @@
 import { isToday } from "date-fns";
 
 import { cn } from "@/utils/cn";
+import { CalendarEvent } from "@/modules/calendar/components/event";
+
+interface Event {
+  id: number;
+  title: string;
+  variant: "blue" | "green" | "red" | "yellow" | "purple" | "gray";
+  startDate: string;
+  endDate: string;
+}
 
 interface MonthProps {
   readonly currentDate: Date;
+  readonly events: Array<Event>;
 }
 
-export function Month({ currentDate }: MonthProps) {
+export function Month({ currentDate, events }: MonthProps) {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
@@ -38,6 +48,13 @@ export function Month({ currentDate }: MonthProps) {
 
   const allCells = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
 
+  const getEventsForDate = (date: Date) => {
+    return events.filter(event => {
+      const eventDate = new Date(event.startDate);
+      return eventDate.getFullYear() === date.getFullYear() && eventDate.getMonth() === date.getMonth() && eventDate.getDate() === date.getDate();
+    });
+  };
+
   return (
     <div>
       <div className="grid grid-cols-7 divide-x border-b">
@@ -49,23 +66,40 @@ export function Month({ currentDate }: MonthProps) {
       </div>
 
       <div className="grid grid-cols-7 border-b lg:border-b-0">
-        {allCells.map(({ day, currentMonth, date }, index) => (
-          <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 p-1.5 lg:p-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
-            <span
-              className={cn(
-                "size-6 text-xs font-semibold",
-                !currentMonth && "opacity-50",
-                isToday(date) && "flex items-center justify-center rounded-full bg-primary-600 font-bold text-white"
-              )}
-            >
-              {day}
-            </span>
+        {allCells.map(({ day, currentMonth, date }, index) => {
+          const cellEvents = getEventsForDate(date);
+          const displayEvents = cellEvents.slice(0, 3);
+          const remainingEvents = cellEvents.length - 3;
 
-            <div className={cn("flex h-2 gap-1 sm:h-[86px] sm:flex-col", !currentMonth && "opacity-50")}></div>
+          return (
+            <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 p-1.5 lg:p-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
+              <span
+                className={cn(
+                  "size-6 text-xs font-semibold",
+                  !currentMonth && "opacity-50",
+                  isToday(date) && "flex items-center justify-center rounded-full bg-primary-600 font-bold text-white"
+                )}
+              >
+                {day}
+              </span>
 
-            <p className={cn("h-4.5 text-xs font-semibold text-t-quaternary", !currentMonth && "opacity-50")}></p>
-          </div>
-        ))}
+              <div className={cn("flex h-2 gap-1 sm:h-[86px] sm:flex-col", !currentMonth && "opacity-50")}>
+                {displayEvents.map(event => (
+                  <CalendarEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} />
+                ))}
+              </div>
+
+              <p className={cn("h-4.5 text-xs font-semibold text-t-quaternary", !currentMonth && "opacity-50")}>
+                {remainingEvents > 0 && (
+                  <>
+                    <span className="sm:hidden">+{remainingEvents}</span>
+                    <span className="hidden sm:inline">{remainingEvents} more...</span>
+                  </>
+                )}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

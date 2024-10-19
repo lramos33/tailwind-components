@@ -2,6 +2,7 @@ import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/utils/cn";
+import { format } from "date-fns";
 
 const calendarEventVariants = cva(
   "flex size-2 items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-full text-xs sm:size-auto sm:rounded-md sm:border sm:px-2 sm:py-1",
@@ -24,16 +25,16 @@ const calendarEventVariants = cva(
 
 interface CalendarEventProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof calendarEventVariants> {
   readonly title: string;
-  readonly time: string;
+  readonly startDate: string;
 }
 
-const CalendarEvent = React.forwardRef<HTMLDivElement, CalendarEventProps>(({ title, time, variant, className, ...props }, ref) => {
+const CalendarEvent = React.forwardRef<HTMLDivElement, CalendarEventProps>(({ title, startDate, variant, className, ...props }, ref) => {
   const calendarEventClasses = cn(calendarEventVariants({ variant, className }));
 
   return (
     <div ref={ref} className={calendarEventClasses} {...props}>
       <p className="hidden flex-1 select-none truncate font-semibold sm:block">{title}</p>
-      <p className="hidden sm:block">{time}</p>
+      <p className="hidden sm:block">{format(startDate, "h:mm a")}</p>
     </div>
   );
 });
