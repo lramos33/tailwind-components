@@ -59,9 +59,9 @@ export function Month({ currentDate, events }: MonthProps) {
     <div>
       <div className="grid grid-cols-7 divide-x border-b">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(day => (
-          <p key={day} className="flex items-center justify-center py-2 text-xs font-medium text-t-quaternary">
-            {day}
-          </p>
+          <div key={day} className="flex items-center justify-center py-2">
+            <span className="text-xs font-medium text-t-quaternary">{day}</span>
+          </div>
         ))}
       </div>
 
