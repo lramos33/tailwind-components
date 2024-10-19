@@ -189,6 +189,41 @@ const MOCK_EVENTS: Array<Event> = [
     endDate: "2024-10-19T16:30:00.000Z",
     variant: "gray",
   },
+  {
+    id: 26,
+    title: "Morning Standup",
+    startDate: "2024-10-18T08:30:00.000Z",
+    endDate: "2024-10-18T09:00:00.000Z",
+    variant: "blue",
+  },
+  {
+    id: 27,
+    title: "Client Meeting",
+    startDate: "2024-10-18T10:30:00.000Z",
+    endDate: "2024-10-18T11:30:00.000Z",
+    variant: "green",
+  },
+  {
+    id: 28,
+    title: "Lunch Break",
+    startDate: "2024-10-18T12:00:00.000Z",
+    endDate: "2024-10-18T13:00:00.000Z",
+    variant: "yellow",
+  },
+  {
+    id: 29,
+    title: "Code Review Session",
+    startDate: "2024-10-18T14:30:00.000Z",
+    endDate: "2024-10-18T15:30:00.000Z",
+    variant: "red",
+  },
+  {
+    id: 30,
+    title: "End of Day Wrap-up",
+    startDate: "2024-10-18T17:00:00.000Z",
+    endDate: "2024-10-18T17:30:00.000Z",
+    variant: "purple",
+  },
 ];
 
 export default function Page() {
