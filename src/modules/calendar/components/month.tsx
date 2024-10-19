@@ -1,7 +1,12 @@
+import { isToday } from "date-fns";
+
 import { cn } from "@/utils/cn";
 
-export function Month() {
-  const currentDate = new Date();
+interface MonthProps {
+  readonly currentDate: Date;
+}
+
+export function Month({ currentDate }: MonthProps) {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
@@ -16,16 +21,19 @@ export function Month() {
   const prevMonthDays = Array.from({ length: firstDayOfMonth }, (_, i) => ({
     day: daysInPrevMonth - firstDayOfMonth + i + 1,
     currentMonth: false,
+    date: new Date(currentYear, currentMonth - 1, daysInPrevMonth - firstDayOfMonth + i + 1),
   }));
 
   const currentMonthDays = Array.from({ length: daysInMonth }, (_, i) => ({
     day: i + 1,
     currentMonth: true,
+    date: new Date(currentYear, currentMonth, i + 1),
   }));
 
   const nextMonthDays = Array.from({ length: (7 - (totalDays % 7)) % 7 }, (_, i) => ({
     day: i + 1,
     currentMonth: false,
+    date: new Date(currentYear, currentMonth + 1, i + 1),
   }));
 
   const allCells = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
@@ -41,10 +49,20 @@ export function Month() {
       </div>
 
       <div className="grid grid-cols-7 border-b lg:border-b-0">
-        {allCells.map(({ day, currentMonth }, index) => (
+        {allCells.map(({ day, currentMonth, date }, index) => (
           <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 p-1.5 lg:p-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
-            <span className={cn("size-6 text-xs font-semibold", !currentMonth && "opacity-50")}>{day}</span>
+            <span
+              className={cn(
+                "size-6 text-xs font-semibold",
+                !currentMonth && "opacity-50",
+                isToday(date) && "flex items-center justify-center rounded-full bg-primary-600 font-bold text-white"
+              )}
+            >
+              {day}
+            </span>
+
             <div className={cn("flex h-2 gap-1 sm:h-[86px] sm:flex-col", !currentMonth && "opacity-50")}></div>
+
             <p className={cn("h-4.5 text-xs font-semibold text-t-quaternary", !currentMonth && "opacity-50")}></p>
           </div>
         ))}

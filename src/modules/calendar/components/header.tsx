@@ -1,30 +1,40 @@
-import { Badge } from "@/components/badge";
 import { Button, ButtonGroup } from "@/components/button";
+
 import { ChevronLeft, ChevronRight, Columns, Grid3X3, List, Plus } from "@/components/icons";
 
-export function Header() {
+import { formatMonthRange } from "@/utils/date.helper";
+
+interface HeaderProps {
+  readonly currentDate: Date;
+  readonly onChangeMonth: (increment: number) => void;
+}
+
+export function Header({ currentDate, onChangeMonth }: HeaderProps) {
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const month = monthNames[currentDate.getMonth()];
+  const year = currentDate.getFullYear();
+
   return (
     <div className="flex flex-col gap-4 border-b p-4 md:flex-row md:items-center md:justify-between">
       <div className="flex items-center gap-3">
         <div className="size-14 overflow-hidden rounded-lg border">
-          <p className="flex h-6 items-center justify-center bg-primary-600 text-center text-xs font-semibold text-white">JAN</p>
-          <p className="flex items-center justify-center text-lg font-bold">10</p>
+          <span className="flex h-6 items-center justify-center bg-primary-600 text-center text-xs font-semibold text-white">
+            {new Date().toLocaleString("default", { month: "short" }).toUpperCase()}
+          </span>
+          <span className="flex items-center justify-center text-lg font-bold">{new Date().getDate()}</span>
         </div>
 
         <div className="space-y-0.5">
-          <div className="flex items-center gap-2">
-            <p className="text-lg font-semibold">January 2025</p>
-            <Badge>Week 1</Badge>
-          </div>
+          <span className="text-lg font-semibold">{`${month} ${year}`}</span>
 
           <div className="flex items-center gap-2">
-            <Button variant="outline" className="size-6.5 px-0 [&_svg]:size-4.5">
+            <Button variant="outline" className="size-6.5 px-0 [&_svg]:size-4.5" onClick={() => onChangeMonth(-1)}>
               <ChevronLeft />
             </Button>
 
-            <p className="text-sm text-t-tertiary">Jan 1, 2025 - Jan 31, 2025</p>
+            <p className="text-sm text-t-tertiary">{formatMonthRange(currentDate)}</p>
 
-            <Button variant="outline" className="size-6.5 px-0 [&_svg]:size-4.5">
+            <Button variant="outline" className="size-6.5 px-0 [&_svg]:size-4.5" onClick={() => onChangeMonth(1)}>
               <ChevronRight />
             </Button>
           </div>
