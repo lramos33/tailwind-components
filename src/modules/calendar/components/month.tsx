@@ -1,7 +1,7 @@
 import { isToday } from "date-fns";
 
 import { cn } from "@/utils/cn";
-import { CalendarEvent } from "@/modules/calendar/components/event";
+import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
 
 interface Event {
   id: number;
@@ -85,7 +85,7 @@ export function Month({ currentDate, events }: MonthProps) {
 
               <div className={cn("flex h-2 gap-1 sm:h-[86px] sm:flex-col", !currentMonth && "opacity-50")}>
                 {displayEvents.map(event => (
-                  <CalendarEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} />
+                  <CalendarMonthEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} />
                 ))}
               </div>
 

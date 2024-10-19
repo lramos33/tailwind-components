@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 import { format } from "date-fns";
 
-const calendarEventVariants = cva(
+const calendarMonthEventVariants = cva(
   "flex size-2 items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-full text-xs sm:size-auto sm:rounded-md sm:border sm:px-2 sm:py-1",
   {
     variants: {
@@ -23,22 +23,22 @@ const calendarEventVariants = cva(
   }
 );
 
-interface CalendarEventProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof calendarEventVariants> {
+interface CalendarMonthEventProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof calendarMonthEventVariants> {
   readonly title: string;
   readonly startDate: string;
 }
 
-const CalendarEvent = React.forwardRef<HTMLDivElement, CalendarEventProps>(({ title, startDate, variant, className, ...props }, ref) => {
-  const calendarEventClasses = cn(calendarEventVariants({ variant, className }));
+const CalendarMonthEvent = React.forwardRef<HTMLDivElement, CalendarMonthEventProps>(({ title, startDate, variant, className, ...props }, ref) => {
+  const calendarMonthEventClasses = cn(calendarMonthEventVariants({ variant, className }));
 
   return (
-    <div ref={ref} className={calendarEventClasses} {...props}>
+    <div ref={ref} className={calendarMonthEventClasses} {...props}>
       <p className="hidden flex-1 select-none truncate font-semibold sm:block">{title}</p>
       <p className="hidden sm:block">{format(startDate, "h:mm a")}</p>
     </div>
   );
 });
 
-CalendarEvent.displayName = "CalendarEvent";
+CalendarMonthEvent.displayName = "CalendarMonthEvent";
 
-export { CalendarEvent };
+export { CalendarMonthEvent };
