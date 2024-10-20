@@ -42,7 +42,7 @@ export function MultiDayWeekEvents({ currentDate, multiDayEvents }: MultiDayWeek
   if (multiDayEventsInWeek.length === 0) return null;
 
   return (
-    <div className="flex">
+    <div className="hidden sm:flex">
       <div className="w-16 border-b shadow-calendar"></div>
       <div className="grid flex-1 grid-cols-7 divide-x border-b border-l">
         {weekDays.map((day, index) => (
