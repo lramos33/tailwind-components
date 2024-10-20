@@ -48,6 +48,7 @@ export function Month({ currentDate, events }: MonthProps) {
 
   const allCells = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
 
+  // TO DO: check this function
   const getEventsForDate = (date: Date) => {
     return events
       .filter(event => {
@@ -58,21 +59,19 @@ export function Month({ currentDate, events }: MonthProps) {
       .sort((a, b) => {
         const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
         const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
-        // Sort multi-day events first, then by start date
-        if (aDuration !== bDuration) {
-          return bDuration - aDuration;
-        }
+        if (aDuration !== bDuration) return bDuration - aDuration;
         return parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
       });
   };
 
+  // TO DO: check this function
   const getEventPosition = (event: Event, date: Date) => {
     const eventStart = startOfDay(parseISO(event.startDate));
     const eventEnd = endOfDay(parseISO(event.endDate));
     const cellDate = startOfDay(date);
 
     if (isSameDay(eventStart, eventEnd)) {
-      return undefined; // Single-day event
+      return undefined;
     } else if (isSameDay(cellDate, eventStart)) {
       return "first";
     } else if (isSameDay(cellDate, eventEnd)) {
