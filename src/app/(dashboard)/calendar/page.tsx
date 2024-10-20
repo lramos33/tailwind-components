@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { Header } from "@/modules/calendar/components/header";
 import { Month } from "@/modules/calendar/components/month";
 import { Week } from "@/modules/calendar/components/week";
-import { isSameDay, parseISO } from "date-fns";
+import { isSameDay, parseISO, addDays, addMonths, addWeeks, startOfWeek } from "date-fns";
 
 interface Event {
   id: number;
@@ -270,19 +270,33 @@ export default function Page() {
     return { singleDayEvents: singleDay, multiDayEvents: multiDay };
   }, []);
 
-  const changeMonth = (increment: number) => {
+  const changeDate = (increment: number) => {
     setCurrentDate(prevDate => {
-      const newDate = new Date(prevDate);
-      newDate.setMonth(prevDate.getMonth() + increment);
-      return newDate;
+      switch (view) {
+        case "month":
+          return addMonths(prevDate, increment);
+        case "week":
+          return addWeeks(prevDate, increment);
+        case "day":
+          return addDays(prevDate, increment);
+      }
     });
+  };
+
+  const handleSetView = (newView: "day" | "week" | "month") => {
+    setView(newView);
+    if (newView === "week") {
+      setCurrentDate(startOfWeek(currentDate));
+    }
   };
 
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
-      <Header currentDate={currentDate} onChangeMonth={changeMonth} setView={setView} />
+      <Header currentDate={currentDate} onChangeDate={changeDate} setView={handleSetView} view={view} />
       {view === "month" && <Month currentDate={currentDate} events={[...singleDayEvents, ...multiDayEvents]} />}
       {view === "week" && <Week currentDate={currentDate} events={singleDayEvents} />}
+      {/* Add a Day component when implemented */}
+      {/* {view === "day" && <Day currentDate={currentDate} events={singleDayEvents} />} */}
     </div>
   );
 }
