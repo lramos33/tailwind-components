@@ -101,7 +101,7 @@ export function Month({ currentDate, events }: MonthProps) {
             <div key={index} className={cn("flex flex-col gap-1 py-1.5 lg:py-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
               <span
                 className={cn(
-                  "h-6 px-1.5 text-xs font-semibold lg:px-2",
+                  "h-6 text-xs font-semibold lg:px-1.5",
                   !currentMonth && "opacity-50",
                   isToday(date) && "flex w-6 translate-x-1 items-center justify-center rounded-full bg-primary-600 px-0 font-bold text-white"
                 )}
@@ -121,7 +121,7 @@ export function Month({ currentDate, events }: MonthProps) {
                 ))}
               </div>
 
-              <p className={cn("h-4.5 px-1.5 text-xs font-semibold text-t-quaternary lg:px-2", !currentMonth && "opacity-50")}>
+              <p className={cn("h-4.5 px-1.5 text-xs font-semibold text-t-quaternary", !currentMonth && "opacity-50")}>
                 {remainingEvents > 0 && (
                   <>
                     <span className="sm:hidden">+{remainingEvents}</span>

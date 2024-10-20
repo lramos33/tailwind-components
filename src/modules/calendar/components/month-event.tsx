@@ -5,7 +5,7 @@ import { cn } from "@/utils/cn";
 import { format } from "date-fns";
 
 const calendarMonthEventVariants = cva(
-  "flex size-2 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-full border-0 text-xs sm:mx-1.5 sm:size-auto sm:h-6.5 sm:rounded-md sm:border sm:px-2 lg:mx-2",
+  "flex size-2 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-full border-0 text-xs sm:mx-1 sm:size-auto sm:h-6.5 sm:rounded-md sm:border sm:px-2",
   {
     variants: {
       variant: {
