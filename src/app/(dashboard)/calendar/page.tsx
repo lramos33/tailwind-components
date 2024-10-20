@@ -192,7 +192,7 @@ const MOCK_EVENTS: Array<Event> = [
   {
     id: 26,
     title: "Morning Standup",
-    startDate: "2024-10-18T08:30:00.000Z",
+    startDate: "2024-10-18T06:30:00.000Z",
     endDate: "2024-10-18T09:00:00.000Z",
     variant: "blue",
   },
@@ -221,15 +221,22 @@ const MOCK_EVENTS: Array<Event> = [
     id: 30,
     title: "End of Day Wrap-up",
     startDate: "2024-10-18T17:00:00.000Z",
-    endDate: "2024-10-18T17:30:00.000Z",
+    endDate: "2024-10-18T18:00:00.000Z",
     variant: "purple",
   },
   {
     id: 31,
     title: "Random event",
-    startDate: "2024-10-18T18:00:00.000Z",
+    startDate: "2024-10-18T20:30:00.000Z",
     endDate: "2024-10-18T21:30:00.000Z",
     variant: "purple",
+  },
+  {
+    id: 32,
+    title: "Random event 2",
+    startDate: "2024-10-18T03:00:00.000Z",
+    endDate: "2024-10-18T20:30:00.000Z",
+    variant: "red",
   },
 ];
 

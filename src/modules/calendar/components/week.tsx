@@ -18,16 +18,15 @@ interface WeekProps {
 export function Week({ currentDate, events }: WeekProps) {
   const weekStart = startOfWeek(currentDate);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const hours = Array.from({ length: 24 }, (_, i) => addHours(new Date().setHours(0, 0, 0, 0), i));
+  const hours = Array.from({ length: 24 }, (_, i) => i);
 
   const getEventStyle = (event: Event, day: Date, groupIndex: number, groupSize: number) => {
     const startDate = parseISO(event.startDate);
     const dayStart = new Date(day.setHours(0, 0, 0, 0));
-
     const eventStart = startDate < dayStart ? dayStart : startDate;
     const startMinutes = differenceInMinutes(eventStart, dayStart);
-    const top = (startMinutes / 1440) * 100; // 1440 minutes in a day
 
+    const top = (startMinutes / 1440) * 100;
     const width = 100 / groupSize;
     const left = groupIndex * width;
 
@@ -53,9 +52,7 @@ export function Week({ currentDate, events }: WeekProps) {
         }
       }
 
-      if (!placed) {
-        groups.push([event]);
-      }
+      if (!placed) groups.push([event]);
     }
 
     return groups;
@@ -67,7 +64,7 @@ export function Week({ currentDate, events }: WeekProps) {
       <div className="w-16 border-r">
         <div className="h-8"></div>
         {hours.map((hour, index) => (
-          <div key={index} className={cn("relative", index === 0 && "border-t")} style={{ height: "96px" }}>
+          <div key={hour} className={cn("relative", index === 0 && "border-t")} style={{ height: "96px" }}>
             <div className="absolute -top-3 right-2 flex h-6 items-center">
               {index !== 0 && <span className="text-xs text-t-quaternary">{format(hour, "h a")}</span>}
             </div>
@@ -96,8 +93,8 @@ export function Week({ currentDate, events }: WeekProps) {
 
             return (
               <div key={dayIndex} className="relative">
-                {hours.map((_hour, hourIndex) => (
-                  <div key={hourIndex} className="relative" style={{ height: "96px" }}>
+                {hours.map(hour => (
+                  <div key={hour} className="relative" style={{ height: "96px" }}>
                     <div className="absolute inset-x-0 top-0 border-b"></div>
                     <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-b-tertiary"></div>
                   </div>
@@ -106,8 +103,6 @@ export function Week({ currentDate, events }: WeekProps) {
                 {groupedEvents.map((group, groupIndex) =>
                   group.map(event => {
                     let style = getEventStyle(event, day, groupIndex, groupedEvents.length);
-
-                    // Check if there are any overlapping events in other groups
                     const hasOverlap = groupedEvents.some(
                       (otherGroup, otherIndex) =>
                         otherIndex !== groupIndex &&
@@ -119,10 +114,7 @@ export function Week({ currentDate, events }: WeekProps) {
                         )
                     );
 
-                    // If there's no overlap, set the width to 100%
-                    if (!hasOverlap) {
-                      style = { ...style, width: "100%", left: "0%" };
-                    }
+                    if (!hasOverlap) style = { ...style, width: "100%", left: "0%" };
 
                     return (
                       <div key={event.id} className="absolute p-1" style={style}>
