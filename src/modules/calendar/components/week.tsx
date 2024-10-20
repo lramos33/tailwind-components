@@ -66,7 +66,7 @@ export function Week({ selectedDate, events }: WeekProps) {
         <p>Please switch to day or month view.</p>
       </div>
 
-      <div className="hidden flex-col sm:flex">
+      <div className="hidden flex-col border-b sm:flex lg:border-b-0">
         {/* Week header */}
         <div className="flex">
           <div className="w-16 border-b shadow-calendar"></div>

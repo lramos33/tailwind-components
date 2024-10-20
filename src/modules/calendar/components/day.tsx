@@ -84,7 +84,7 @@ export function Day({ selectedDate, events, onDateChange }: DayProps) {
   const groupedEvents = groupEvents(dayEvents);
 
   return (
-    <div className="flex">
+    <div className="flex border-b lg:border-b-0">
       <div className="flex flex-1 flex-col">
         {/* Day header */}
         <div className="flex border-b shadow-calendar">
@@ -151,7 +151,7 @@ export function Day({ selectedDate, events, onDateChange }: DayProps) {
         </ScrollArea>
       </div>
 
-      <div className="divide-y border-l md:w-72">
+      <div className="hidden w-72 divide-y border-l md:block">
         <SingleDayPicker mode="single" selected={date} onSelect={handleSelect} initialFocus />
 
         <div className="px-6 py-5">
