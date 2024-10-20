@@ -181,6 +181,10 @@ const config: Config = {
       borderColor: {
         DEFAULT: "var(--border-secondary)",
       },
+
+      boxShadow: {
+        calendar: "0px 1px 2px -1px #0A0D121A",
+      },
     },
   },
   plugins: [],
