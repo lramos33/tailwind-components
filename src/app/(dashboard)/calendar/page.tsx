@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Header } from "@/modules/calendar/components/header";
 import { Month } from "@/modules/calendar/components/month";
 import { Week } from "@/modules/calendar/components/week";
+import { isSameDay, parseISO } from "date-fns";
 
 interface Event {
   id: number;
@@ -234,8 +235,8 @@ const MOCK_EVENTS: Array<Event> = [
   {
     id: 32,
     title: "Random event 2",
-    startDate: "2024-10-18T03:00:00.000Z",
-    endDate: "2024-10-18T20:30:00.000Z",
+    startDate: "2024-09-18T12:00:00.000Z",
+    endDate: "2024-10-18T12:00:00.000Z",
     variant: "red",
   },
 ];
@@ -243,6 +244,24 @@ const MOCK_EVENTS: Array<Event> = [
 export default function Page() {
   const [view, setView] = useState<"day" | "week" | "month">("week");
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const { singleDayEvents, multiDayEvents } = useMemo(() => {
+    const singleDay: Event[] = [];
+    const multiDay: Event[] = [];
+
+    MOCK_EVENTS.forEach(event => {
+      const startDate = parseISO(event.startDate);
+      const endDate = parseISO(event.endDate);
+
+      if (isSameDay(startDate, endDate)) {
+        singleDay.push(event);
+      } else {
+        multiDay.push(event);
+      }
+    });
+
+    return { singleDayEvents: singleDay, multiDayEvents: multiDay };
+  }, []);
 
   const changeMonth = (increment: number) => {
     setCurrentDate(prevDate => {
@@ -255,8 +274,8 @@ export default function Page() {
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
       <Header currentDate={currentDate} onChangeMonth={changeMonth} setView={setView} />
-      {view === "month" && <Month currentDate={currentDate} events={MOCK_EVENTS} />}
-      {view === "week" && <Week currentDate={currentDate} events={MOCK_EVENTS} />}
+      {view === "month" && <Month currentDate={currentDate} events={singleDayEvents} />}
+      {view === "week" && <Week currentDate={currentDate} events={singleDayEvents} />}
     </div>
   );
 }
