@@ -301,7 +301,7 @@ export default function Page() {
 
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
-      <Header currentDate={currentDate} onChangeDate={changeDate} setView={handleSetView} view={view} />
+      <Header currentDate={currentDate} onChangeDate={changeDate} setView={handleSetView} view={view} events={MOCK_EVENTS} />
 
       {view === "week" && <MultiDayWeekEvents currentDate={currentDate} multiDayEvents={multiDayEvents} />}
 

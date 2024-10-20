@@ -1,19 +1,30 @@
+import { useMemo } from "react";
+import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isBefore, isAfter, parseISO, format } from "date-fns";
+
+import { Badge } from "@/components/badge";
 import { Button, ButtonGroup } from "@/components/button";
 
 import { ChevronLeft, ChevronRight, Columns, Grid3X3, List, Plus } from "@/components/icons";
 
 import { formatMonthRange, formatWeekRange } from "@/utils/date.helper";
 
+interface Event {
+  startDate: string;
+  endDate: string;
+}
+
 interface HeaderProps {
   readonly currentDate: Date;
   readonly onChangeDate: (increment: number) => void;
   readonly setView: (view: "day" | "week" | "month") => void;
   readonly view: "day" | "week" | "month";
+  readonly events: Event[];
 }
 
-export function Header({ currentDate, onChangeDate, setView, view }: HeaderProps) {
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const month = monthNames[currentDate.getMonth()];
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+export function Header({ currentDate, onChangeDate, setView, view, events }: HeaderProps) {
+  const month = MONTH_NAMES[currentDate.getMonth()];
   const year = currentDate.getFullYear();
 
   const getDateRangeText = () => {
@@ -23,9 +34,34 @@ export function Header({ currentDate, onChangeDate, setView, view }: HeaderProps
       case "week":
         return formatWeekRange(currentDate);
       case "day":
-        return currentDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+        return format(currentDate, "MMMM d, yyyy");
     }
   };
+
+  const numOfEventsInRange = useMemo(() => {
+    let rangeStart: Date, rangeEnd: Date;
+
+    switch (view) {
+      case "month":
+        rangeStart = startOfMonth(currentDate);
+        rangeEnd = endOfMonth(currentDate);
+        break;
+      case "week":
+        rangeStart = startOfWeek(currentDate);
+        rangeEnd = endOfWeek(currentDate);
+        break;
+      case "day":
+        rangeStart = startOfDay(currentDate);
+        rangeEnd = endOfDay(currentDate);
+        break;
+    }
+
+    return events.filter(event => {
+      const eventStart = parseISO(event.startDate);
+      const eventEnd = parseISO(event.endDate);
+      return (isAfter(eventStart, rangeStart) || isAfter(eventEnd, rangeStart)) && (isBefore(eventStart, rangeEnd) || isBefore(eventEnd, rangeEnd));
+    }).length;
+  }, [currentDate, view, events]);
 
   return (
     <div className="flex flex-col gap-4 border-b p-4 md:flex-row md:items-center md:justify-between">
@@ -38,7 +74,10 @@ export function Header({ currentDate, onChangeDate, setView, view }: HeaderProps
         </div>
 
         <div className="space-y-0.5">
-          <span className="text-lg font-semibold">{`${month} ${year}`}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-semibold">{`${month} ${year}`}</span>
+            {numOfEventsInRange > 0 && <Badge>{numOfEventsInRange} events</Badge>}
+          </div>
 
           <div className="flex items-center gap-2">
             <Button variant="outline" className="size-6.5 px-0 [&_svg]:size-4.5" onClick={() => onChangeDate(-1)}>
