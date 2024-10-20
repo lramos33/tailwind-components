@@ -234,15 +234,15 @@ const MOCK_EVENTS: Array<Event> = [
   },
   {
     id: 32,
-    title: "Random event 2",
-    startDate: "2024-09-18T12:00:00.000Z",
-    endDate: "2024-10-18T12:00:00.000Z",
-    variant: "red",
+    title: "Congress",
+    startDate: "2024-10-10T12:00:00.000Z",
+    endDate: "2024-10-20T12:00:00.000Z",
+    variant: "gray",
   },
 ];
 
 export default function Page() {
-  const [view, setView] = useState<"day" | "week" | "month">("week");
+  const [view, setView] = useState<"day" | "week" | "month">("month");
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const { singleDayEvents, multiDayEvents } = useMemo(() => {
@@ -274,7 +274,7 @@ export default function Page() {
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
       <Header currentDate={currentDate} onChangeMonth={changeMonth} setView={setView} />
-      {view === "month" && <Month currentDate={currentDate} events={singleDayEvents} />}
+      {view === "month" && <Month currentDate={currentDate} events={[...singleDayEvents, ...multiDayEvents]} />}
       {view === "week" && <Week currentDate={currentDate} events={singleDayEvents} />}
     </div>
   );

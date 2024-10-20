@@ -1,4 +1,4 @@
-import { isToday } from "date-fns";
+import { isToday, parseISO, isSameDay, isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
 
 import { cn } from "@/utils/cn";
 import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
@@ -49,10 +49,37 @@ export function Month({ currentDate, events }: MonthProps) {
   const allCells = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
 
   const getEventsForDate = (date: Date) => {
-    return events.filter(event => {
-      const eventDate = new Date(event.startDate);
-      return eventDate.getFullYear() === date.getFullYear() && eventDate.getMonth() === date.getMonth() && eventDate.getDate() === date.getDate();
-    });
+    return events
+      .filter(event => {
+        const eventStart = parseISO(event.startDate);
+        const eventEnd = parseISO(event.endDate);
+        return isWithinInterval(date, { start: eventStart, end: eventEnd }) || isSameDay(date, eventStart) || isSameDay(date, eventEnd);
+      })
+      .sort((a, b) => {
+        const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
+        const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
+        // Sort multi-day events first, then by start date
+        if (aDuration !== bDuration) {
+          return bDuration - aDuration;
+        }
+        return parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
+      });
+  };
+
+  const getEventPosition = (event: Event, date: Date) => {
+    const eventStart = startOfDay(parseISO(event.startDate));
+    const eventEnd = endOfDay(parseISO(event.endDate));
+    const cellDate = startOfDay(date);
+
+    if (isSameDay(eventStart, eventEnd)) {
+      return undefined; // Single-day event
+    } else if (isSameDay(cellDate, eventStart)) {
+      return "first";
+    } else if (isSameDay(cellDate, eventEnd)) {
+      return "last";
+    } else {
+      return "middle";
+    }
   };
 
   return (
@@ -72,24 +99,30 @@ export function Month({ currentDate, events }: MonthProps) {
           const remainingEvents = cellEvents.length - 3;
 
           return (
-            <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 p-1.5 lg:p-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
+            <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 py-1.5 lg:py-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
               <span
                 className={cn(
-                  "size-6 text-xs font-semibold",
+                  "h-6 px-1.5 text-xs font-semibold lg:px-2",
                   !currentMonth && "opacity-50",
-                  isToday(date) && "flex items-center justify-center rounded-full bg-primary-600 font-bold text-white"
+                  isToday(date) && "flex w-6 translate-x-1 items-center justify-center rounded-full bg-primary-600 px-0 font-bold text-white"
                 )}
               >
                 {day}
               </span>
 
-              <div className={cn("flex h-2 gap-1 sm:h-[86px] sm:flex-col", !currentMonth && "opacity-50")}>
+              <div className={cn("flex h-2 gap-1 px-2 sm:h-[86px] sm:flex-col sm:px-0", !currentMonth && "opacity-50")}>
                 {displayEvents.map(event => (
-                  <CalendarMonthEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} />
+                  <CalendarMonthEvent
+                    key={event.id}
+                    title={event.title}
+                    startDate={event.startDate}
+                    variant={event.variant}
+                    multiDay={getEventPosition(event, date)}
+                  />
                 ))}
               </div>
 
-              <p className={cn("h-4.5 text-xs font-semibold text-t-quaternary", !currentMonth && "opacity-50")}>
+              <p className={cn("h-4.5 px-1.5 text-xs font-semibold text-t-quaternary lg:px-2", !currentMonth && "opacity-50")}>
                 {remainingEvents > 0 && (
                   <>
                     <span className="sm:hidden">+{remainingEvents}</span>
