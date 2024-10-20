@@ -41,12 +41,10 @@ export function RawDayPicker({ className, classNames, showOutsideDays = true, ..
         day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
         day_range_start: "day-range-start",
         day_range_end: "day-range-end",
-        day_selected:
-          "bg-primary-600 text-primary-foreground hover:bg-primary-700 hover:text-primary-foreground focus:bg-primary-700 focus:text-primary-foreground",
-        day_today: "bg-red-500 text-accent-foreground", // add bg-bg-tertiary
-        day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-bg-secondary aria-selected:text-muted-foreground aria-selected:opacity-30",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle: "aria-selected:bg-bg-tertiary aria-selected:text-accent-foreground",
+        day_selected: "bg-primary-600 text-white hover:bg-primary-700 focus:bg-primary-700",
+        day_today: "text-red-600 aria-selected:text-white",
+        day_outside: "day-outside opacity-50 text-red-500 aria-selected:text-red-500 aria-selected:bg-bg-secondary aria-selected:opacity-30",
+        day_range_middle: "aria-selected:bg-bg-tertiary aria-selected:text-t-secondary",
         day_hidden: "invisible",
         ...classNames,
       }}
