@@ -61,7 +61,7 @@ export function Header({ currentDate, onChangeDate, setView, view }: HeaderProps
             <span className="hidden xl:block">Day</span>
           </Button>
 
-          <Button onClick={() => setView("week")}>
+          <Button onClick={() => setView("week")} className="hidden sm:flex">
             <Columns />
             <span className="hidden xl:block">Week</span>
           </Button>
