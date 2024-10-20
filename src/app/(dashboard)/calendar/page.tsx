@@ -300,6 +300,10 @@ export default function Page() {
     }
   };
 
+  const handleDayDateChange = (newDate: Date) => {
+    setCurrentDate(newDate);
+  };
+
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
       <Header currentDate={currentDate} onChangeDate={changeDate} setView={handleSetView} view={view} events={MOCK_EVENTS} />
@@ -308,7 +312,7 @@ export default function Page() {
 
       {view === "month" && <Month currentDate={currentDate} events={[...singleDayEvents, ...multiDayEvents]} />}
       {view === "week" && <Week currentDate={currentDate} events={singleDayEvents} />}
-      {view === "day" && <Day currentDate={currentDate} events={singleDayEvents} />}
+      {view === "day" && <Day currentDate={currentDate} events={singleDayEvents} onDateChange={handleDayDateChange} />}
     </div>
   );
 }

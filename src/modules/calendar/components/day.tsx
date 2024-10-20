@@ -2,7 +2,7 @@ import { parseISO, differenceInMinutes, areIntervalsOverlapping, format } from "
 import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
 import { CalendarTimeline } from "@/modules/calendar/components/timeline";
 import { ScrollArea } from "@/components/scroll-area";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SingleDayPicker } from "@/components/single-day-picker";
 
 interface Event {
@@ -16,15 +16,21 @@ interface Event {
 interface DayProps {
   readonly currentDate: Date;
   readonly events: Event[];
+  readonly onDateChange: (date: Date) => void;
 }
 
-export function Day({ currentDate, events }: DayProps) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+export function Day({ currentDate, events, onDateChange }: DayProps) {
+  const [date, setDate] = useState<Date | undefined>(currentDate);
+
+  useEffect(() => {
+    setDate(currentDate);
+  }, [currentDate]);
 
   const handleSelect = (value: Date | undefined) => {
     if (!value) return;
 
     setDate(value);
+    onDateChange(value);
   };
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
