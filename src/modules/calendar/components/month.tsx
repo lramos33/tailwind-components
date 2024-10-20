@@ -98,7 +98,7 @@ export function Month({ currentDate, events }: MonthProps) {
           const remainingEvents = cellEvents.length - 3;
 
           return (
-            <div key={index} tabIndex={0} className={cn("flex flex-col gap-1 py-1.5 lg:py-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
+            <div key={index} className={cn("flex flex-col gap-1 py-1.5 lg:py-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
               <span
                 className={cn(
                   "h-6 px-1.5 text-xs font-semibold lg:px-2",
