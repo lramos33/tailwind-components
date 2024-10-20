@@ -5,7 +5,7 @@ import { cn } from "@/utils/cn";
 import { format } from "date-fns";
 
 const calendarMonthEventVariants = cva(
-  "flex size-2 items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-full border-0 text-xs sm:mx-1.5 sm:size-auto sm:h-6.5 sm:rounded-md sm:border sm:px-2 lg:mx-2",
+  "flex size-2 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-full border-0 text-xs sm:mx-1.5 sm:size-auto sm:h-6.5 sm:rounded-md sm:border sm:px-2 lg:mx-2",
   {
     variants: {
       variant: {
@@ -39,7 +39,7 @@ const CalendarMonthEvent = React.forwardRef<HTMLDivElement, CalendarMonthEventPr
 
   return (
     <div ref={ref} className={calendarMonthEventClasses} {...props}>
-      {(!multiDay || multiDay === "first") && <p className="hidden flex-1 select-none truncate font-semibold sm:block">{title}</p>}
+      {(!multiDay || multiDay === "first") && <p className="hidden flex-1 truncate font-semibold sm:block">{title}</p>}
       {(!multiDay || multiDay === "first") && <span className="hidden sm:block">{format(new Date(startDate), "h:mm a")}</span>}
     </div>
   );
