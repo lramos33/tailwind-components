@@ -66,70 +66,74 @@ export function Day({ currentDate, events }: DayProps) {
   const groupedEvents = groupEvents(dayEvents);
 
   return (
-    <div className="flex flex-col">
-      {/* Day header */}
-      <div className="flex border-b shadow-calendar">
-        <div className="w-16"></div>
-        <div className="flex-1 border-l py-2 text-center">
-          <span className="text-xs font-medium text-t-quaternary">
-            {format(currentDate, "EEE")} <span className="font-semibold text-t-secondary">{format(currentDate, "d")}</span>
-          </span>
-        </div>
-      </div>
-
-      <ScrollArea className="h-[736px]" type="always">
-        <div className="flex">
-          {/* Time column */}
-          <div className="relative w-16">
-            {hours.map((hour, index) => (
-              <div key={hour} className="relative" style={{ height: "96px" }}>
-                <div className="absolute -top-3 right-2 flex h-6 items-center">
-                  {index !== 0 && <span className="text-xs text-t-quaternary">{format(new Date().setHours(hour), "h a")}</span>}
-                </div>
-              </div>
-            ))}
+    <div className="flex">
+      <div className="flex flex-1 flex-col">
+        {/* Day header */}
+        <div className="flex border-b shadow-calendar">
+          <div className="w-16"></div>
+          <div className="flex-1 border-l py-2 text-center">
+            <span className="text-xs font-medium text-t-quaternary">
+              {format(currentDate, "EEE")} <span className="font-semibold text-t-secondary">{format(currentDate, "d")}</span>
+            </span>
           </div>
+        </div>
 
-          {/* Day grid */}
-          <div className="relative flex-1 border-l">
-            <CalendarTimeline />
-
-            {/* Day body */}
-            <div className="relative">
+        <ScrollArea className="h-[736px]" type="always">
+          <div className="flex">
+            {/* Time column */}
+            <div className="relative w-16">
               {hours.map((hour, index) => (
                 <div key={hour} className="relative" style={{ height: "96px" }}>
-                  {index !== 0 && <div className="absolute inset-x-0 top-0 border-b"></div>}
-                  <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-b-tertiary"></div>
+                  <div className="absolute -top-3 right-2 flex h-6 items-center">
+                    {index !== 0 && <span className="text-xs text-t-quaternary">{format(new Date().setHours(hour), "h a")}</span>}
+                  </div>
                 </div>
               ))}
+            </div>
 
-              {groupedEvents.map((group, groupIndex) =>
-                group.map(event => {
-                  let style = getEventStyle(event, groupIndex, groupedEvents.length);
-                  const hasOverlap = groupedEvents.some(
-                    (otherGroup, otherIndex) =>
-                      otherIndex !== groupIndex &&
-                      otherGroup.some(otherEvent =>
-                        areIntervalsOverlapping(
-                          { start: parseISO(event.startDate), end: parseISO(event.endDate) },
-                          { start: parseISO(otherEvent.startDate), end: parseISO(otherEvent.endDate) }
+            {/* Day grid */}
+            <div className="relative flex-1 border-l">
+              <CalendarTimeline />
+
+              {/* Day body */}
+              <div className="relative">
+                {hours.map((hour, index) => (
+                  <div key={hour} className="relative" style={{ height: "96px" }}>
+                    {index !== 0 && <div className="absolute inset-x-0 top-0 border-b"></div>}
+                    <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-b-tertiary"></div>
+                  </div>
+                ))}
+
+                {groupedEvents.map((group, groupIndex) =>
+                  group.map(event => {
+                    let style = getEventStyle(event, groupIndex, groupedEvents.length);
+                    const hasOverlap = groupedEvents.some(
+                      (otherGroup, otherIndex) =>
+                        otherIndex !== groupIndex &&
+                        otherGroup.some(otherEvent =>
+                          areIntervalsOverlapping(
+                            { start: parseISO(event.startDate), end: parseISO(event.endDate) },
+                            { start: parseISO(otherEvent.startDate), end: parseISO(otherEvent.endDate) }
+                          )
                         )
-                      )
-                  );
+                    );
 
-                  if (!hasOverlap) style = { ...style, width: "100%", left: "0%" };
+                    if (!hasOverlap) style = { ...style, width: "100%", left: "0%" };
 
-                  return (
-                    <div key={event.id} className="absolute p-1" style={style}>
-                      <CalendarWeekEvent title={event.title} startDate={event.startDate} endDate={event.endDate} variant={event.variant} />
-                    </div>
-                  );
-                })
-              )}
+                    return (
+                      <div key={event.id} className="absolute p-1" style={style}>
+                        <CalendarWeekEvent title={event.title} startDate={event.startDate} endDate={event.endDate} variant={event.variant} />
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </ScrollArea>
+        </ScrollArea>
+      </div>
+
+      <div className="border-l md:w-80"></div>
     </div>
   );
 }
