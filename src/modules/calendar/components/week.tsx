@@ -1,6 +1,8 @@
-import { startOfWeek, addDays, format, addHours, parseISO, isSameDay, differenceInMinutes, areIntervalsOverlapping } from "date-fns";
-import { cn } from "@/utils/cn";
+import { startOfWeek, addDays, format, parseISO, isSameDay, differenceInMinutes, areIntervalsOverlapping } from "date-fns";
+
 import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
+
+import { cn } from "@/utils/cn";
 
 interface Event {
   id: number;
