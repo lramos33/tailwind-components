@@ -7,6 +7,7 @@ import { Week } from "@/modules/calendar/components/week";
 import { Month } from "@/modules/calendar/components/month";
 import { Header } from "@/modules/calendar/components/header";
 import { MultiDayWeekEvents } from "@/modules/calendar/components/multi-day-week-events";
+import { Day } from "@/modules/calendar/components/day";
 
 interface Event {
   id: number;
@@ -258,7 +259,7 @@ const MOCK_EVENTS: Array<Event> = [
 ];
 
 export default function Page() {
-  const [view, setView] = useState<"day" | "week" | "month">("week");
+  const [view, setView] = useState<"day" | "week" | "month">("day");
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const { singleDayEvents, multiDayEvents } = useMemo(() => {
@@ -307,8 +308,7 @@ export default function Page() {
 
       {view === "month" && <Month currentDate={currentDate} events={[...singleDayEvents, ...multiDayEvents]} />}
       {view === "week" && <Week currentDate={currentDate} events={singleDayEvents} />}
-      {/* Add a Day component when implemented */}
-      {/* {view === "day" && <Day currentDate={currentDate} events={singleDayEvents} />} */}
+      {view === "day" && <Day currentDate={currentDate} events={singleDayEvents} />}
     </div>
   );
 }
