@@ -23,7 +23,7 @@ const ScrollBar = forwardRef<TScrollBarRef, TScrollBarProps>(({ className, orien
     )}
     {...props}
   >
-    <ScrollAreaPrimitive.ScrollAreaThumb className={cn("relative flex-1 rounded-full bg-gray-500")} />
+    <ScrollAreaPrimitive.ScrollAreaThumb className={cn("relative flex-1 rounded-full bg-gray-400 dark:bg-gray-500")} />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ));
 
