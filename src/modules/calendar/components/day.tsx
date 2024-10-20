@@ -2,6 +2,8 @@ import { parseISO, differenceInMinutes, areIntervalsOverlapping, format } from "
 import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
 import { CalendarTimeline } from "@/modules/calendar/components/timeline";
 import { ScrollArea } from "@/components/scroll-area";
+import { RawDayPicker } from "@/components/RawDayPicker";
+import { useState } from "react";
 
 interface Event {
   id: number;
@@ -17,6 +19,14 @@ interface DayProps {
 }
 
 export function Day({ currentDate, events }: DayProps) {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const handleSelect = (value: Date | undefined) => {
+    if (!value) return;
+
+    setDate(value);
+  };
+
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   const getEventStyle = (event: Event, groupIndex: number, groupSize: number) => {
@@ -133,7 +143,13 @@ export function Day({ currentDate, events }: DayProps) {
         </ScrollArea>
       </div>
 
-      <div className="border-l md:w-80"></div>
+      <div className="divide-y border-l md:w-72">
+        <RawDayPicker mode="single" selected={date} onSelect={handleSelect} initialFocus />
+
+        <div className="px-6 py-5">
+          <p>In progress...</p>
+        </div>
+      </div>
     </div>
   );
 }
