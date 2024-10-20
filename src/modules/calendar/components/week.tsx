@@ -1,9 +1,10 @@
-import { startOfWeek, addDays, format, parseISO, isSameDay, differenceInMinutes, areIntervalsOverlapping } from "date-fns";
+import { startOfWeek, addDays, format, parseISO, isSameDay, differenceInMinutes, areIntervalsOverlapping, isToday } from "date-fns";
 
 import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
 
 import { cn } from "@/utils/cn";
 import { ScrollArea } from "@/components/scroll-area";
+import { useEffect, useState } from "react";
 
 interface Event {
   id: number;
@@ -19,6 +20,13 @@ interface WeekProps {
 }
 
 export function Week({ currentDate, events }: WeekProps) {
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000); // Update every minute
+    return () => clearInterval(timer);
+  }, []);
+
   const weekStart = startOfWeek(currentDate);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => i);
@@ -61,6 +69,11 @@ export function Week({ currentDate, events }: WeekProps) {
     return groups;
   };
 
+  const getCurrentTimePosition = () => {
+    const minutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+    return (minutes / 1440) * 100;
+  };
+
   return (
     <div className="flex flex-col">
       {/* Week header */}
@@ -91,7 +104,12 @@ export function Week({ currentDate, events }: WeekProps) {
           </div>
 
           {/* Week grid */}
-          <div className="flex-1 border-l">
+          <div className="relative flex-1 border-l">
+            {/* Current time line */}
+            <div className="pointer-events-none absolute inset-x-0 z-50 border-t-2 border-primary-600" style={{ top: `${getCurrentTimePosition()}%` }}>
+              <div className="absolute -left-1.5 -top-1.5 size-3 -translate-y-px rounded-full bg-primary-600"></div>
+            </div>
+
             {/* Week body */}
             <div className="grid grid-cols-7 divide-x">
               {weekDays.map((day, dayIndex) => {
