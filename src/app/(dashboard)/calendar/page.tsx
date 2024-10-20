@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import { Header } from "@/modules/calendar/components/header";
-import { Month } from "@/modules/calendar/components/month";
+import { useState, useMemo } from "react";
+import { isSameDay, parseISO, addDays, addMonths, addWeeks, startOfWeek } from "date-fns";
+
 import { Week } from "@/modules/calendar/components/week";
-import { isSameDay, parseISO, addDays, addMonths, addWeeks, startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
+import { Month } from "@/modules/calendar/components/month";
+import { Header } from "@/modules/calendar/components/header";
 import { MultiDayWeekEvents } from "@/modules/calendar/components/multi-day-week-events";
 
 interface Event {
@@ -298,34 +299,11 @@ export default function Page() {
     }
   };
 
-  const weekStart = startOfWeek(currentDate);
-  const weekEnd = endOfWeek(currentDate);
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-
-  const isEventInWeek = useCallback(
-    (event: Event) => {
-      const eventStart = parseISO(event.startDate);
-      const eventEnd = parseISO(event.endDate);
-      return (
-        isWithinInterval(eventStart, { start: weekStart, end: weekEnd }) ||
-        isWithinInterval(eventEnd, { start: weekStart, end: weekEnd }) ||
-        (eventStart <= weekStart && eventEnd >= weekEnd)
-      );
-    },
-    [weekStart, weekEnd]
-  );
-
-  const multiDayEventsInWeek = useMemo(() => {
-    return multiDayEvents.filter(isEventInWeek);
-  }, [multiDayEvents, isEventInWeek]);
-
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
       <Header currentDate={currentDate} onChangeDate={changeDate} setView={handleSetView} view={view} />
 
-      {view === "week" && multiDayEventsInWeek.length > 0 && (
-        <MultiDayWeekEvents weekDays={weekDays} multiDayEvents={multiDayEventsInWeek} isEventInWeek={isEventInWeek} />
-      )}
+      {view === "week" && <MultiDayWeekEvents currentDate={currentDate} multiDayEvents={multiDayEvents} />}
 
       {view === "month" && <Month currentDate={currentDate} events={[...singleDayEvents, ...multiDayEvents]} />}
       {view === "week" && <Week currentDate={currentDate} events={singleDayEvents} />}

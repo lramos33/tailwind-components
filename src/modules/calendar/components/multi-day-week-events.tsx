@@ -1,5 +1,7 @@
+import { useMemo } from "react";
+import { parseISO, startOfDay, endOfDay, isSameDay, startOfWeek, endOfWeek, addDays, isWithinInterval, differenceInDays } from "date-fns";
+
 import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
-import { parseISO, startOfDay, endOfDay, isSameDay, differenceInDays } from "date-fns";
 
 interface Event {
   id: number;
@@ -10,35 +12,34 @@ interface Event {
 }
 
 interface MultiDayWeekEventsProps {
-  readonly weekDays: Date[];
+  readonly currentDate: Date;
   readonly multiDayEvents: Event[];
-  readonly isEventInWeek: (event: Event) => boolean;
 }
 
-export function MultiDayWeekEvents({ weekDays, multiDayEvents, isEventInWeek }: MultiDayWeekEventsProps) {
-  const getEventPosition = (event: Event, date: Date) => {
-    const eventStart = startOfDay(parseISO(event.startDate));
-    const eventEnd = endOfDay(parseISO(event.endDate));
-    const cellDate = startOfDay(date);
+export function MultiDayWeekEvents({ currentDate, multiDayEvents }: MultiDayWeekEventsProps) {
+  const weekStart = startOfWeek(currentDate);
+  const weekEnd = endOfWeek(currentDate);
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
-    if (isSameDay(eventStart, eventEnd)) {
-      return undefined;
-    } else if (isSameDay(cellDate, eventStart)) {
-      return "first";
-    } else if (isSameDay(cellDate, eventEnd)) {
-      return "last";
-    } else if (cellDate > eventStart && cellDate < eventEnd) {
-      return "middle";
-    } else {
-      return undefined;
-    }
-  };
+  const multiDayEventsInWeek = useMemo(() => {
+    return multiDayEvents
+      .filter(event => {
+        const eventStart = parseISO(event.startDate);
+        const eventEnd = parseISO(event.endDate);
+        return (
+          isWithinInterval(eventStart, { start: weekStart, end: weekEnd }) ||
+          isWithinInterval(eventEnd, { start: weekStart, end: weekEnd }) ||
+          (eventStart <= weekStart && eventEnd >= weekEnd)
+        );
+      })
+      .sort((a, b) => {
+        const durationA = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
+        const durationB = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
+        return durationA - durationB;
+      });
+  }, [multiDayEvents, weekStart, weekEnd]);
 
-  const sortedEvents = [...multiDayEvents].sort((a, b) => {
-    const durationA = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
-    const durationB = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
-    return durationA - durationB;
-  });
+  if (multiDayEventsInWeek.length === 0) return null;
 
   return (
     <div className="flex">
@@ -46,14 +47,24 @@ export function MultiDayWeekEvents({ weekDays, multiDayEvents, isEventInWeek }: 
       <div className="grid flex-1 grid-cols-7 divide-x border-b border-l">
         {weekDays.map((day, index) => (
           <div key={index} className="flex h-full flex-col justify-end gap-1 py-1">
-            {sortedEvents.filter(isEventInWeek).map(event => {
-              const position = getEventPosition(event, day);
+            {multiDayEventsInWeek.map(event => {
+              const eventStart = startOfDay(parseISO(event.startDate));
+              const eventEnd = endOfDay(parseISO(event.endDate));
+              const cellDate = startOfDay(day);
 
-              if (position) {
-                return <CalendarMonthEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} multiDay={position} />;
+              if (cellDate < eventStart || cellDate > eventEnd) return null;
+
+              let position: "first" | "middle" | "last";
+
+              if (isSameDay(cellDate, eventStart)) {
+                position = "first";
+              } else if (isSameDay(cellDate, eventEnd)) {
+                position = "last";
+              } else {
+                position = "middle";
               }
 
-              return null;
+              return <CalendarMonthEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} multiDay={position} />;
             })}
           </div>
         ))}
