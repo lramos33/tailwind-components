@@ -14,7 +14,7 @@ interface Event {
 }
 
 interface HeaderProps {
-  readonly currentDate: Date;
+  readonly selectedDate: Date;
   readonly onChangeDate: (increment: number) => void;
   readonly setView: (view: "day" | "week" | "month") => void;
   readonly view: "day" | "week" | "month";
@@ -23,18 +23,18 @@ interface HeaderProps {
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-export function Header({ currentDate, onChangeDate, setView, view, events }: HeaderProps) {
-  const month = MONTH_NAMES[currentDate.getMonth()];
-  const year = currentDate.getFullYear();
+export function Header({ selectedDate, onChangeDate, setView, view, events }: HeaderProps) {
+  const month = MONTH_NAMES[selectedDate.getMonth()];
+  const year = selectedDate.getFullYear();
 
   const getDateRangeText = () => {
     switch (view) {
       case "month":
-        return formatMonthRange(currentDate);
+        return formatMonthRange(selectedDate);
       case "week":
-        return formatWeekRange(currentDate);
+        return formatWeekRange(selectedDate);
       case "day":
-        return format(currentDate, "MMMM d, yyyy");
+        return format(selectedDate, "MMMM d, yyyy");
     }
   };
 
@@ -43,16 +43,16 @@ export function Header({ currentDate, onChangeDate, setView, view, events }: Hea
 
     switch (view) {
       case "month":
-        rangeStart = startOfMonth(currentDate);
-        rangeEnd = endOfMonth(currentDate);
+        rangeStart = startOfMonth(selectedDate);
+        rangeEnd = endOfMonth(selectedDate);
         break;
       case "week":
-        rangeStart = startOfWeek(currentDate);
-        rangeEnd = endOfWeek(currentDate);
+        rangeStart = startOfWeek(selectedDate);
+        rangeEnd = endOfWeek(selectedDate);
         break;
       case "day":
-        rangeStart = startOfDay(currentDate);
-        rangeEnd = endOfDay(currentDate);
+        rangeStart = startOfDay(selectedDate);
+        rangeEnd = endOfDay(selectedDate);
         break;
     }
 
@@ -61,7 +61,7 @@ export function Header({ currentDate, onChangeDate, setView, view, events }: Hea
       const eventEnd = parseISO(event.endDate);
       return (isAfter(eventStart, rangeStart) || isAfter(eventEnd, rangeStart)) && (isBefore(eventStart, rangeEnd) || isBefore(eventEnd, rangeEnd));
     }).length;
-  }, [currentDate, view, events]);
+  }, [selectedDate, view, events]);
 
   return (
     <div className="flex flex-col gap-4 border-b p-4 md:flex-row md:items-center md:justify-between">

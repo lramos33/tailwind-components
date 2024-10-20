@@ -12,13 +12,13 @@ interface Event {
 }
 
 interface MonthProps {
-  readonly currentDate: Date;
+  readonly selectedDate: Date;
   readonly events: Array<Event>;
 }
 
-export function Month({ currentDate, events }: MonthProps) {
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
+export function Month({ selectedDate, events }: MonthProps) {
+  const currentYear = selectedDate.getFullYear();
+  const currentMonth = selectedDate.getMonth();
 
   const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();

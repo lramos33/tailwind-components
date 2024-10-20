@@ -12,12 +12,12 @@ interface Event {
 }
 
 interface WeekProps {
-  readonly currentDate: Date;
+  readonly selectedDate: Date;
   readonly events: Event[];
 }
 
-export function Week({ currentDate, events }: WeekProps) {
-  const weekStart = startOfWeek(currentDate);
+export function Week({ selectedDate, events }: WeekProps) {
+  const weekStart = startOfWeek(selectedDate);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => i);
 

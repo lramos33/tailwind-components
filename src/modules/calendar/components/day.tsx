@@ -14,17 +14,17 @@ interface Event {
 }
 
 interface DayProps {
-  readonly currentDate: Date;
+  readonly selectedDate: Date;
   readonly events: Event[];
   readonly onDateChange: (date: Date) => void;
 }
 
-export function Day({ currentDate, events, onDateChange }: DayProps) {
-  const [date, setDate] = useState<Date | undefined>(currentDate);
+export function Day({ selectedDate, events, onDateChange }: DayProps) {
+  const [date, setDate] = useState<Date | undefined>(selectedDate);
 
   useEffect(() => {
-    setDate(currentDate);
-  }, [currentDate]);
+    setDate(selectedDate);
+  }, [selectedDate]);
 
   const handleSelect = (value: Date | undefined) => {
     if (!value) return;
@@ -37,7 +37,7 @@ export function Day({ currentDate, events, onDateChange }: DayProps) {
 
   const getEventStyle = (event: Event, groupIndex: number, groupSize: number) => {
     const startDate = parseISO(event.startDate);
-    const dayStart = new Date(currentDate.setHours(0, 0, 0, 0));
+    const dayStart = new Date(selectedDate.setHours(0, 0, 0, 0));
     const eventStart = startDate < dayStart ? dayStart : startDate;
     const startMinutes = differenceInMinutes(eventStart, dayStart);
 
@@ -76,7 +76,9 @@ export function Day({ currentDate, events, onDateChange }: DayProps) {
   const dayEvents = events.filter(event => {
     const eventDate = parseISO(event.startDate);
     return (
-      eventDate.getDate() === currentDate.getDate() && eventDate.getMonth() === currentDate.getMonth() && eventDate.getFullYear() === currentDate.getFullYear()
+      eventDate.getDate() === selectedDate.getDate() &&
+      eventDate.getMonth() === selectedDate.getMonth() &&
+      eventDate.getFullYear() === selectedDate.getFullYear()
     );
   });
   const groupedEvents = groupEvents(dayEvents);
@@ -89,7 +91,7 @@ export function Day({ currentDate, events, onDateChange }: DayProps) {
           <div className="w-16"></div>
           <div className="flex-1 border-l py-2 text-center">
             <span className="text-xs font-medium text-t-quaternary">
-              {format(currentDate, "EEE")} <span className="font-semibold text-t-secondary">{format(currentDate, "d")}</span>
+              {format(selectedDate, "EEE")} <span className="font-semibold text-t-secondary">{format(selectedDate, "d")}</span>
             </span>
           </div>
         </div>

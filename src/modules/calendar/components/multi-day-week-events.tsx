@@ -12,13 +12,13 @@ interface Event {
 }
 
 interface MultiDayWeekEventsProps {
-  readonly currentDate: Date;
+  readonly selectedDate: Date;
   readonly multiDayEvents: Event[];
 }
 
-export function MultiDayWeekEvents({ currentDate, multiDayEvents }: MultiDayWeekEventsProps) {
-  const weekStart = startOfWeek(currentDate);
-  const weekEnd = endOfWeek(currentDate);
+export function MultiDayWeekEvents({ selectedDate, multiDayEvents }: MultiDayWeekEventsProps) {
+  const weekStart = startOfWeek(selectedDate);
+  const weekEnd = endOfWeek(selectedDate);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   const multiDayEventsInWeek = useMemo(() => {

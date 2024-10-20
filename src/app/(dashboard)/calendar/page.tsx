@@ -260,7 +260,7 @@ const MOCK_EVENTS: Array<Event> = [
 
 export default function Page() {
   const [view, setView] = useState<"day" | "week" | "month">("day");
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { singleDayEvents, multiDayEvents } = useMemo(() => {
     const singleDay: Event[] = [];
@@ -281,7 +281,7 @@ export default function Page() {
   }, []);
 
   const changeDate = (increment: number) => {
-    setCurrentDate(prevDate => {
+    setSelectedDate(prevDate => {
       switch (view) {
         case "month":
           return addMonths(prevDate, increment);
@@ -296,23 +296,23 @@ export default function Page() {
   const handleSetView = (newView: "day" | "week" | "month") => {
     setView(newView);
     if (newView === "week") {
-      setCurrentDate(startOfWeek(currentDate));
+      setSelectedDate(startOfWeek(selectedDate)); // Update this line
     }
   };
 
   const handleDayDateChange = (newDate: Date) => {
-    setCurrentDate(newDate);
+    setSelectedDate(newDate);
   };
 
   return (
     <div className="h-fit w-full lg:rounded-xl lg:border">
-      <Header currentDate={currentDate} onChangeDate={changeDate} setView={handleSetView} view={view} events={MOCK_EVENTS} />
+      <Header selectedDate={selectedDate} onChangeDate={changeDate} setView={handleSetView} view={view} events={MOCK_EVENTS} />
 
-      {view === "week" && <MultiDayWeekEvents currentDate={currentDate} multiDayEvents={multiDayEvents} />}
+      {view === "week" && <MultiDayWeekEvents selectedDate={selectedDate} multiDayEvents={multiDayEvents} />}
 
-      {view === "month" && <Month currentDate={currentDate} events={[...singleDayEvents, ...multiDayEvents]} />}
-      {view === "week" && <Week currentDate={currentDate} events={singleDayEvents} />}
-      {view === "day" && <Day currentDate={currentDate} events={singleDayEvents} onDateChange={handleDayDateChange} />}
+      {view === "month" && <Month selectedDate={selectedDate} events={[...singleDayEvents, ...multiDayEvents]} />}
+      {view === "week" && <Week selectedDate={selectedDate} events={singleDayEvents} />}
+      {view === "day" && <Day selectedDate={selectedDate} events={singleDayEvents} onDateChange={handleDayDateChange} />}
     </div>
   );
 }
