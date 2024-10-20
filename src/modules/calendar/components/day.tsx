@@ -2,8 +2,8 @@ import { parseISO, differenceInMinutes, areIntervalsOverlapping, format } from "
 import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
 import { CalendarTimeline } from "@/modules/calendar/components/timeline";
 import { ScrollArea } from "@/components/scroll-area";
-import { RawDayPicker } from "@/components/RawDayPicker";
 import { useState } from "react";
+import { SingleDayPicker } from "@/components/single-day-picker";
 
 interface Event {
   id: number;
@@ -144,7 +144,7 @@ export function Day({ currentDate, events }: DayProps) {
       </div>
 
       <div className="divide-y border-l md:w-72">
-        <RawDayPicker mode="single" selected={date} onSelect={handleSelect} initialFocus />
+        <SingleDayPicker mode="single" selected={date} onSelect={handleSelect} initialFocus />
 
         <div className="px-6 py-5">
           <p>In progress...</p>

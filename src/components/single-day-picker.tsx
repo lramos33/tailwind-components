@@ -8,7 +8,7 @@ import { type CustomComponents, DayPicker as ReactDayPicker } from "react-day-pi
 
 export type DayPickerProps = ComponentProps<typeof ReactDayPicker>;
 
-export function RawDayPicker({ className, classNames, showOutsideDays = true, ...props }: DayPickerProps) {
+export function SingleDayPicker({ className, classNames, showOutsideDays = true, ...props }: DayPickerProps) {
   return (
     <ReactDayPicker
       showOutsideDays={showOutsideDays}
@@ -16,35 +16,24 @@ export function RawDayPicker({ className, classNames, showOutsideDays = true, ..
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
+
         caption: "flex justify-center pt-1 relative items-center",
         caption_label: "text-sm font-medium",
+
         nav: "space-x-1 flex items-center",
         nav_button: cn(buttonVariants({ variant: "outline" }), "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
         head_row: "flex",
-        head_cell: "rounded-md w-9 font-medium text-[0.8rem]",
+        head_cell: "w-9 font-medium text-sm",
         row: "flex w-full mt-2",
 
-        cell: cn(
-          "size-9 text-t-secondary text-center text-sm p-0 relative",
-          "[&:has([aria-selected].day-range-start)]:rounded-l-lg",
-          "[&:has([aria-selected].day-range-end)]:rounded-r-lg",
-          "[&:has([aria-selected].day-outside)]:bg-bg-secondary",
-          "[&:has([aria-selected])]:bg-bg-tertiary",
-          "first:[&:has([aria-selected])]:rounded-l-md",
-          "last:[&:has([aria-selected])]:rounded-r-md",
-          "focus-within:relative focus-within:z-20"
-        ),
-
-        day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
-        day_range_start: "day-range-start",
-        day_range_end: "day-range-end",
+        cell: "size-9 flex items-center justify-center text-t-secondary text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+        day: cn(buttonVariants({ variant: "ghost" }), "size-8.5 p-0 font-normal aria-selected:opacity-100"),
         day_selected: "bg-primary-600 text-white hover:bg-primary-700 focus:bg-primary-700",
         day_today: "text-red-600 aria-selected:text-white",
-        day_outside: "day-outside opacity-50 text-red-500 aria-selected:text-red-500 aria-selected:bg-bg-secondary aria-selected:opacity-30",
-        day_range_middle: "aria-selected:bg-bg-tertiary aria-selected:text-t-secondary",
+        day_outside: "opacity-50 aria-selected:opacity-40",
+
         day_hidden: "invisible",
         ...classNames,
       }}

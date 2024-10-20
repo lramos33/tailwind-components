@@ -105,4 +105,4 @@ ButtonGroup.displayName = "ButtonGroup";
 
 // ================================== //
 
-export { Button, ButtonGroup };
+export { Button, ButtonGroup, buttonVariants };
