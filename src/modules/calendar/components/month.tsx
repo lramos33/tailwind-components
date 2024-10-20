@@ -91,7 +91,7 @@ export function Month({ currentDate, events }: MonthProps) {
         ))}
       </div>
 
-      <div className="grid grid-cols-7 border-b lg:border-b-0">
+      <div className="grid grid-cols-7 overflow-hidden border-b lg:border-b-0">
         {allCells.map(({ day, currentMonth, date }, index) => {
           const cellEvents = getEventsForDate(date);
           const displayEvents = cellEvents.slice(0, 3);

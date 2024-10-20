@@ -17,8 +17,8 @@ const calendarMonthEventVariants = cva(
         gray: "border-gray-200 bg-gray-700 text-gray-700 dark:border-gray-700 dark:text-gray-300 sm:bg-gray-50 sm:dark:bg-gray-900",
       },
       multiDay: {
-        first: "mr-0 sm:mr-0 sm:rounded-r-none sm:border-r-0 lg:mr-0",
-        middle: "mx-0 sm:mx-0 sm:rounded-none sm:border-x-0 lg:mx-0",
+        first: "z-10 mr-0 border sm:mr-0 sm:w-[calc(100%_+_1px)] sm:rounded-r-none sm:border-r-0 lg:mr-0 [&>span]:sm:mr-4.5",
+        middle: "z-10 mx-0 sm:mx-0 sm:w-[calc(100%_+_1px)] sm:rounded-none sm:border-x-0 lg:mx-0",
         last: "ml-0 sm:ml-0 sm:rounded-l-none sm:border-l-0 lg:ml-0",
       },
     },
@@ -40,7 +40,7 @@ const CalendarMonthEvent = React.forwardRef<HTMLDivElement, CalendarMonthEventPr
   return (
     <div ref={ref} className={calendarMonthEventClasses} {...props}>
       {(!multiDay || multiDay === "first") && <p className="hidden flex-1 select-none truncate font-semibold sm:block">{title}</p>}
-      {(!multiDay || multiDay === "first") && <p className="hidden sm:block">{format(new Date(startDate), "h:mm a")}</p>}
+      {(!multiDay || multiDay === "first") && <span className="hidden sm:block">{format(new Date(startDate), "h:mm a")}</span>}
     </div>
   );
 });

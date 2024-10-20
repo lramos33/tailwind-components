@@ -239,6 +239,13 @@ const MOCK_EVENTS: Array<Event> = [
     endDate: "2024-10-20T12:00:00.000Z",
     variant: "gray",
   },
+  {
+    id: 33,
+    title: "Meeting",
+    startDate: "2024-10-28T12:00:00.000Z",
+    endDate: "2024-10-28T15:00:00.000Z",
+    variant: "red",
+  },
 ];
 
 export default function Page() {
