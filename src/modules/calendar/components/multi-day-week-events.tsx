@@ -1,8 +1,10 @@
 import { useMemo } from "react";
-import { parseISO, startOfDay, endOfDay, isSameDay, startOfWeek, endOfWeek, addDays, isWithinInterval, differenceInDays } from "date-fns";
+import { parseISO, startOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval, differenceInDays } from "date-fns";
 
 import { CalendarEventBadge } from "@/modules/calendar/components/event-badge";
+
 import type { IEvent } from "@/modules/calendar/interfaces";
+
 interface MultiDayWeekEventsProps {
   readonly selectedDate: Date;
   readonly multiDayEvents: IEvent[];
@@ -39,34 +41,9 @@ export function MultiDayWeekEvents({ selectedDate, multiDayEvents }: MultiDayWee
       <div className="grid flex-1 grid-cols-7 divide-x border-b border-l">
         {weekDays.map((day, index) => (
           <div key={index} className="flex h-full flex-col justify-end gap-1 py-1">
-            {multiDayEventsInWeek.map(event => {
-              const eventStart = startOfDay(parseISO(event.startDate));
-              const eventEnd = endOfDay(parseISO(event.endDate));
-              const cellDate = startOfDay(day);
-
-              if (cellDate < eventStart || cellDate > eventEnd) return null;
-
-              let position: "first" | "middle" | "last";
-
-              if (isSameDay(cellDate, eventStart)) {
-                position = "first";
-              } else if (isSameDay(cellDate, eventEnd)) {
-                position = "last";
-              } else {
-                position = "middle";
-              }
-
-              return (
-                <CalendarEventBadge
-                  key={event.id}
-                  event={event}
-                  // title={event.title}
-                  // startDate={event.startDate}
-                  // variant={event.variant}
-                  multiDay={position}
-                />
-              );
-            })}
+            {multiDayEventsInWeek.map(event => (
+              <CalendarEventBadge key={event.id} event={event} cellDate={startOfDay(day)} />
+            ))}
           </div>
         ))}
       </div>

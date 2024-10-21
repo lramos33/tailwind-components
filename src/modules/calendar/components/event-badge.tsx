@@ -1,8 +1,9 @@
 import React from "react";
-import { format } from "date-fns";
 import { cva, type VariantProps } from "class-variance-authority";
+import { endOfDay, format, isSameDay, parseISO, startOfDay } from "date-fns";
 
 import { cn } from "@/utils/cn";
+
 import type { IEvent } from "@/modules/calendar/interfaces";
 
 const calendarEventBadgeVariants = cva(
@@ -17,10 +18,11 @@ const calendarEventBadgeVariants = cva(
         purple: "border-purple-200 bg-purple-600 text-purple-700 dark:border-purple-800 dark:text-purple-300 sm:bg-purple-50 sm:dark:bg-purple-950",
         gray: "border-gray-200 bg-gray-600 text-gray-700 dark:border-gray-700 dark:text-gray-300 sm:bg-gray-50 sm:dark:bg-gray-900",
       },
-      multiDay: {
+      multiDayPosition: {
         first: "z-10 mr-0 sm:mr-0 sm:w-[calc(100%_+_1px)] sm:rounded-r-none sm:border-r-0 lg:mr-0 [&>span]:sm:mr-2.5",
         middle: "z-10 mx-0 sm:mx-0 sm:w-[calc(100%_+_1px)] sm:rounded-none sm:border-x-0 lg:mx-0",
         last: "ml-0 sm:ml-0 sm:rounded-l-none sm:border-l-0 lg:ml-0",
+        none: "hidden",
       },
     },
     defaultVariants: {
@@ -29,20 +31,41 @@ const calendarEventBadgeVariants = cva(
   }
 );
 
-interface CalendarEventBadgeProps extends React.HTMLAttributes<HTMLDivElement>, Omit<VariantProps<typeof calendarEventBadgeVariants>, "variant"> {
+interface CalendarEventBadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    Omit<VariantProps<typeof calendarEventBadgeVariants>, "variant" | "multiDayPosition"> {
   readonly event: IEvent;
-  readonly multiDay?: "first" | "middle" | "last";
+  readonly cellDate: Date;
   readonly eventCurrentDay?: number;
   readonly eventTotalDays?: number;
 }
 
 const CalendarEventBadge = React.forwardRef<HTMLDivElement, CalendarEventBadgeProps>(
-  ({ event, multiDay, className, eventCurrentDay, eventTotalDays, ...props }, ref) => {
-    const calendarEventBadgeClasses = cn(calendarEventBadgeVariants({ variant: event.variant, multiDay, className }));
+  ({ event, className, cellDate, eventCurrentDay, eventTotalDays, ...props }, ref) => {
+    const eventStart = startOfDay(parseISO(event.startDate));
+    const eventEnd = endOfDay(parseISO(event.endDate));
+
+    if (cellDate < eventStart || cellDate > eventEnd) return null;
+
+    let position: "first" | "middle" | "last" | "none";
+
+    if (isSameDay(eventStart, eventEnd)) {
+      position = "none";
+    } else if (isSameDay(cellDate, eventStart)) {
+      position = "first";
+    } else if (isSameDay(cellDate, eventEnd)) {
+      position = "last";
+    } else {
+      position = "middle";
+    }
+
+    const calendarEventBadgeClasses = cn(calendarEventBadgeVariants({ variant: event.variant, multiDayPosition: position, className }));
+
+    const renderBadgeText = ["first", "none"].includes(position);
 
     return (
       <div ref={ref} className={calendarEventBadgeClasses} {...props}>
-        {(!multiDay || multiDay === "first") && (
+        {renderBadgeText && (
           <p className="hidden flex-1 truncate font-semibold sm:block">
             {eventCurrentDay && (
               <span className="text-xs">
@@ -52,7 +75,7 @@ const CalendarEventBadge = React.forwardRef<HTMLDivElement, CalendarEventBadgePr
             {event.title}
           </p>
         )}
-        {(!multiDay || multiDay === "first") && <span className="hidden sm:block">{format(new Date(event.startDate), "h:mm a")}</span>}
+        {renderBadgeText && <span className="hidden sm:block">{format(new Date(event.startDate), "h:mm a")}</span>}
       </div>
     );
   }

@@ -1,9 +1,11 @@
-import { isToday, parseISO, isSameDay, isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
+import { Fragment } from "react";
+import { isToday, parseISO, isSameDay, isWithinInterval, differenceInDays, startOfDay } from "date-fns";
+
+import { BulletEvent } from "@/modules/calendar/components/bullet-event";
+import { CalendarEventBadge } from "@/modules/calendar/components/event-badge";
 
 import { cn } from "@/utils/cn";
-import { CalendarEventBadge } from "@/modules/calendar/components/event-badge";
-import { Fragment } from "react";
-import { BulletEvent } from "@/modules/calendar/components/bullet-event";
+
 import type { IEvent } from "@/modules/calendar/interfaces";
 
 interface MonthProps {
@@ -59,23 +61,6 @@ export function Month({ selectedDate, events }: MonthProps) {
       });
   };
 
-  // TO DO: check this function
-  const getEventPosition = (event: IEvent, date: Date) => {
-    const eventStart = startOfDay(parseISO(event.startDate));
-    const eventEnd = endOfDay(parseISO(event.endDate));
-    const cellDate = startOfDay(date);
-
-    if (isSameDay(eventStart, eventEnd)) {
-      return undefined;
-    } else if (isSameDay(cellDate, eventStart)) {
-      return "first";
-    } else if (isSameDay(cellDate, eventEnd)) {
-      return "last";
-    } else {
-      return "middle";
-    }
-  };
-
   return (
     <div>
       <div className="grid grid-cols-7 divide-x border-b">
@@ -104,19 +89,13 @@ export function Month({ selectedDate, events }: MonthProps) {
                 {day}
               </span>
 
-              <div className={cn("flex h-2 gap-1 px-2 sm:h-[86px] sm:flex-col sm:px-0", !currentMonth && "opacity-50")}>
+              <div
+                className={cn("flex h-6 items-center gap-1 px-2 md:h-[86px] md:flex-col md:items-stretch md:border-0 md:px-0", !currentMonth && "opacity-50")}
+              >
                 {displayEvents.map(event => (
                   <Fragment key={event.id}>
-                    <CalendarEventBadge
-                      className="hidden sm:flex"
-                      event={event}
-                      // title={event.title}
-                      // startDate={event.startDate}
-                      // variant={event.variant}
-                      multiDay={getEventPosition(event, date)}
-                    />
-
-                    <BulletEvent className="flex sm:hidden" variant={event.variant} />
+                    <CalendarEventBadge className="hidden md:flex" event={event} cellDate={startOfDay(date)} />
+                    <BulletEvent className="flex md:hidden" variant={event.variant} />
                   </Fragment>
                 ))}
               </div>
