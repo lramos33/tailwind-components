@@ -42,7 +42,7 @@ const MOCK_EVENTS: Array<IEvent> = [
   },
   {
     id: 5,
-    title: "Team Building Event",
+    title: "Team Building",
     startDate: "2024-10-21T02:00:00.000Z",
     endDate: "2024-10-21T16:00:00.000Z",
     variant: "purple",
@@ -58,7 +58,7 @@ const MOCK_EVENTS: Array<IEvent> = [
     id: 7,
     title: "Training Workshop",
     startDate: "2024-10-18T09:00:00.000Z",
-    endDate: "2024-10-22T17:00:00.000Z",
+    endDate: "2024-10-20T17:00:00.000Z",
     variant: "blue",
   },
   {
@@ -168,7 +168,7 @@ const MOCK_EVENTS: Array<IEvent> = [
   },
   {
     id: 23,
-    title: "Team Building",
+    title: "Team",
     startDate: "2024-10-18T14:00:00.000Z",
     endDate: "2024-10-18T17:00:00.000Z",
     variant: "purple",
@@ -251,6 +251,22 @@ const MOCK_EVENTS: Array<IEvent> = [
     variant: "red",
   },
 ];
+
+// it worked, but now we have an alignment problem, i will try to explain.
+
+// Lets see the day 20 and 21 of october.
+
+// In 20 oct:
+// The "Congress" event is in the first row
+// The "Training Workshop" event is in the second row
+// The "Team Building" event is in the last (third) row.
+
+// In 21 oct:
+// The "Team building" event in in the FIRST row!!!
+
+// See the problem? There is no consistency between days. The "Team building" event should be in the third row (and the first and second should be empty).
+
+// You need to calculate the row position based on the previous day.
 
 export default function Page() {
   const [view, setView] = useState<"day" | "week" | "month">("month");
