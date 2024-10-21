@@ -4,6 +4,7 @@ import { CalendarTimeline } from "@/modules/calendar/components/timeline";
 import { ScrollArea } from "@/components/scroll-area";
 import { useState, useEffect } from "react";
 import { SingleDayPicker } from "@/components/single-day-picker";
+import { MultiDayDayEvents } from "@/modules/calendar/components/multi-day-day-events";
 
 import type { IEvent } from "@/modules/calendar/interfaces";
 
@@ -11,9 +12,10 @@ interface DayProps {
   readonly selectedDate: Date;
   readonly events: IEvent[];
   readonly onDateChange: (date: Date) => void;
+  readonly multiDayEvents: IEvent[]; // Add this prop
 }
 
-export function Day({ selectedDate, events, onDateChange }: DayProps) {
+export function Day({ selectedDate, events, onDateChange, multiDayEvents }: DayProps) {
   const [date, setDate] = useState<Date | undefined>(selectedDate);
 
   useEffect(() => {
@@ -81,12 +83,16 @@ export function Day({ selectedDate, events, onDateChange }: DayProps) {
     <div className="flex border-b lg:border-b-0">
       <div className="flex flex-1 flex-col">
         {/* Day header */}
-        <div className="flex border-b shadow-calendar">
-          <div className="w-16"></div>
-          <div className="flex-1 border-l py-2 text-center">
-            <span className="text-xs font-medium text-t-quaternary">
-              {format(selectedDate, "EEE")} <span className="font-semibold text-t-secondary">{format(selectedDate, "d")}</span>
-            </span>
+        <div>
+          <MultiDayDayEvents selectedDate={selectedDate} multiDayEvents={multiDayEvents} />
+
+          <div className="flex border-b shadow-calendar">
+            <div className="w-16"></div>
+            <div className="flex-1 border-l py-2 text-center">
+              <span className="text-xs font-medium text-t-quaternary">
+                {format(selectedDate, "EEE")} <span className="font-semibold text-t-secondary">{format(selectedDate, "d")}</span>
+              </span>
+            </div>
           </div>
         </div>
 

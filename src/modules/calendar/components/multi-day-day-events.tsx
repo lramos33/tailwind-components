@@ -38,7 +38,7 @@ export function MultiDayDayEvents({ selectedDate, multiDayEvents }: MultiDayDayE
 
   return (
     <div className="flex border-b">
-      <div className="w-16 border-b shadow-calendar"></div>
+      <div className="w-16 shadow-calendar"></div>
       <div className="flex flex-1 flex-col gap-1 border-l py-1">
         {multiDayEventsInDay.map(event => (
           <CalendarEventBadge key={event.id} event={event} cellDate={selectedDate} eventCurrentDay={1} eventTotalDays={10} />

@@ -22,7 +22,7 @@ const calendarEventBadgeVariants = cva(
         first: "z-10 mr-0 sm:mr-0 sm:w-[calc(100%_+_1px)] sm:rounded-r-none sm:border-r-0 lg:mr-0 [&>span]:sm:mr-2.5",
         middle: "z-10 mx-0 sm:mx-0 sm:w-[calc(100%_+_1px)] sm:rounded-none sm:border-x-0 lg:mx-0",
         last: "ml-0 sm:ml-0 sm:rounded-l-none sm:border-l-0 lg:ml-0",
-        none: "hidden",
+        none: "",
       },
     },
     defaultVariants: {
@@ -47,9 +47,11 @@ const CalendarEventBadge = React.forwardRef<HTMLDivElement, CalendarEventBadgePr
 
     if (cellDate < eventStart || cellDate > eventEnd) return null;
 
-    let position: "first" | "middle" | "last" | "none";
+    let position: "first" | "middle" | "last" | "none" | undefined;
 
-    if (isSameDay(eventStart, eventEnd)) {
+    if (eventCurrentDay && eventTotalDays) {
+      position = "none";
+    } else if (isSameDay(eventStart, eventEnd)) {
       position = "none";
     } else if (isSameDay(cellDate, eventStart)) {
       position = "first";
@@ -75,6 +77,7 @@ const CalendarEventBadge = React.forwardRef<HTMLDivElement, CalendarEventBadgePr
             {event.title}
           </p>
         )}
+
         {renderBadgeText && <span className="hidden sm:block">{format(new Date(event.startDate), "h:mm a")}</span>}
       </div>
     );
