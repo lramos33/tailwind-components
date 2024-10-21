@@ -304,7 +304,7 @@ export default function Page() {
 
       {view === "week" && <MultiDayWeekEvents selectedDate={selectedDate} multiDayEvents={multiDayEvents} />}
 
-      {view === "month" && <Month selectedDate={selectedDate} events={[...singleDayEvents, ...multiDayEvents]} />}
+      {view === "month" && <Month selectedDate={selectedDate} events={singleDayEvents} multiDayEvents={multiDayEvents} />}
       {view === "week" && <Week selectedDate={selectedDate} events={singleDayEvents} />}
       {view === "day" && <Day selectedDate={selectedDate} events={singleDayEvents} onDateChange={handleDayDateChange} multiDayEvents={multiDayEvents} />}
     </div>

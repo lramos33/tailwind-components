@@ -11,9 +11,10 @@ import type { IEvent } from "@/modules/calendar/interfaces";
 interface MonthProps {
   readonly selectedDate: Date;
   readonly events: Array<IEvent>;
+  readonly multiDayEvents: Array<IEvent>;
 }
 
-export function Month({ selectedDate, events }: MonthProps) {
+export function Month({ selectedDate, events, multiDayEvents }: MonthProps) {
   const currentYear = selectedDate.getFullYear();
   const currentMonth = selectedDate.getMonth();
 
@@ -45,20 +46,24 @@ export function Month({ selectedDate, events }: MonthProps) {
 
   const allCells = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
 
-  // TO DO: check this function
   const getEventsForDate = (date: Date) => {
-    return events
-      .filter(event => {
-        const eventStart = parseISO(event.startDate);
-        const eventEnd = parseISO(event.endDate);
-        return isWithinInterval(date, { start: eventStart, end: eventEnd }) || isSameDay(date, eventStart) || isSameDay(date, eventEnd);
-      })
-      .sort((a, b) => {
-        const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
-        const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
-        if (aDuration !== bDuration) return bDuration - aDuration;
-        return parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
-      });
+    const multiDayEventsForDate = multiDayEvents.filter(event => {
+      const eventStart = parseISO(event.startDate);
+      const eventEnd = parseISO(event.endDate);
+      return isWithinInterval(date, { start: eventStart, end: eventEnd }) || isSameDay(date, eventStart);
+    });
+
+    const singleDayEventsForDate = events.filter(event => {
+      const eventStart = parseISO(event.startDate);
+      return isSameDay(date, eventStart);
+    });
+
+    return [...multiDayEventsForDate, ...singleDayEventsForDate].sort((a, b) => {
+      const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
+      const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
+      if (aDuration !== bDuration) return bDuration - aDuration;
+      return parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
+    });
   };
 
   return (
