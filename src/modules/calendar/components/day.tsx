@@ -1,5 +1,5 @@
 import { parseISO, differenceInMinutes, areIntervalsOverlapping, format } from "date-fns";
-import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
+import { CalendarWeekEventCard } from "@/modules/calendar/components/week-event-card";
 import { CalendarTimeline } from "@/modules/calendar/components/timeline";
 import { ScrollArea } from "@/components/scroll-area";
 import { useState, useEffect } from "react";
@@ -134,7 +134,7 @@ export function Day({ selectedDate, events, onDateChange }: DayProps) {
 
                     return (
                       <div key={event.id} className="absolute p-1" style={style}>
-                        <CalendarWeekEvent title={event.title} startDate={event.startDate} endDate={event.endDate} variant={event.variant} />
+                        <CalendarWeekEventCard title={event.title} startDate={event.startDate} endDate={event.endDate} variant={event.variant} />
                       </div>
                     );
                   })

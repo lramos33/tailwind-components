@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 import { format } from "date-fns";
 
-const calendarMonthEventVariants = cva(
+const calendarEventBadgeVariants = cva(
   "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs",
   {
     variants: {
@@ -28,7 +28,7 @@ const calendarMonthEventVariants = cva(
   }
 );
 
-interface CalendarMonthEventProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof calendarMonthEventVariants> {
+interface CalendarEventBadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof calendarEventBadgeVariants> {
   readonly title: string;
   readonly startDate: string;
   readonly multiDay?: "first" | "middle" | "last";
@@ -36,12 +36,12 @@ interface CalendarMonthEventProps extends React.HTMLAttributes<HTMLDivElement>, 
   readonly eventTotalDays?: number;
 }
 
-const CalendarMonthEvent = React.forwardRef<HTMLDivElement, CalendarMonthEventProps>(
+const CalendarEventBadge = React.forwardRef<HTMLDivElement, CalendarEventBadgeProps>(
   ({ title, startDate, variant, multiDay, className, eventCurrentDay, eventTotalDays, ...props }, ref) => {
-    const calendarMonthEventClasses = cn(calendarMonthEventVariants({ variant, multiDay, className }));
+    const calendarEventBadgeClasses = cn(calendarEventBadgeVariants({ variant, multiDay, className }));
 
     return (
-      <div ref={ref} className={calendarMonthEventClasses} {...props}>
+      <div ref={ref} className={calendarEventBadgeClasses} {...props}>
         {(!multiDay || multiDay === "first") && (
           <p className="hidden flex-1 truncate font-semibold sm:block">
             {eventCurrentDay && (
@@ -58,6 +58,6 @@ const CalendarMonthEvent = React.forwardRef<HTMLDivElement, CalendarMonthEventPr
   }
 );
 
-CalendarMonthEvent.displayName = "CalendarMonthEvent";
+CalendarEventBadge.displayName = "CalendarEventBadge";
 
-export { CalendarMonthEvent };
+export { CalendarEventBadge };

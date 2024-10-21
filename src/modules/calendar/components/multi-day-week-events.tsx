@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { parseISO, startOfDay, endOfDay, isSameDay, startOfWeek, endOfWeek, addDays, isWithinInterval, differenceInDays } from "date-fns";
 
-import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
+import { CalendarEventBadge } from "@/modules/calendar/components/event-badge";
 import type { IEvent } from "@/modules/calendar/interfaces";
 interface MultiDayWeekEventsProps {
   readonly selectedDate: Date;
@@ -56,7 +56,7 @@ export function MultiDayWeekEvents({ selectedDate, multiDayEvents }: MultiDayWee
                 position = "middle";
               }
 
-              return <CalendarMonthEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} multiDay={position} />;
+              return <CalendarEventBadge key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} multiDay={position} />;
             })}
           </div>
         ))}

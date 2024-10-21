@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { parseISO, isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
 
-import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
+import { CalendarEventBadge } from "@/modules/calendar/components/event-badge";
 import type { IEvent } from "@/modules/calendar/interfaces";
 
 interface MultiDayDayEventsProps {
@@ -40,7 +40,7 @@ export function MultiDayDayEvents({ selectedDate, multiDayEvents }: MultiDayDayE
       <div className="w-16 border-b shadow-calendar"></div>
       <div className="flex flex-1 flex-col gap-1 border-l py-1">
         {multiDayEventsInDay.map(event => (
-          <CalendarMonthEvent key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} eventCurrentDay={1} eventTotalDays={10} />
+          <CalendarEventBadge key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} eventCurrentDay={1} eventTotalDays={10} />
         ))}
       </div>
     </div>

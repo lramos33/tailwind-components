@@ -1,7 +1,7 @@
 import { isToday, parseISO, isSameDay, isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
 
 import { cn } from "@/utils/cn";
-import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
+import { CalendarEventBadge } from "@/modules/calendar/components/event-badge";
 import { Fragment } from "react";
 import { BulletEvent } from "@/modules/calendar/components/bullet-event";
 import type { IEvent } from "@/modules/calendar/interfaces";
@@ -107,7 +107,7 @@ export function Month({ selectedDate, events }: MonthProps) {
               <div className={cn("flex h-2 gap-1 px-2 sm:h-[86px] sm:flex-col sm:px-0", !currentMonth && "opacity-50")}>
                 {displayEvents.map(event => (
                   <Fragment key={event.id}>
-                    <CalendarMonthEvent
+                    <CalendarEventBadge
                       className="hidden sm:flex"
                       title={event.title}
                       startDate={event.startDate}
