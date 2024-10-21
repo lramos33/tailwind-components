@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { isToday, parseISO, isSameDay, isWithinInterval, differenceInDays, startOfDay } from "date-fns";
+import { isToday, parseISO, isSameDay, isWithinInterval, differenceInDays, startOfDay, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 
 import { BulletEvent } from "@/modules/calendar/components/bullet-event";
 import { CalendarEventBadge } from "@/modules/calendar/components/event-badge";
@@ -46,24 +46,63 @@ export function Month({ selectedDate, events, multiDayEvents }: MonthProps) {
 
   const allCells = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
 
+  const calculateEventPositions = (events: IEvent[]) => {
+    const monthStart = startOfMonth(selectedDate);
+    const monthEnd = endOfMonth(selectedDate);
+    const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+
+    const eventPositions: { [key: string]: number } = {};
+    const occupiedPositions: { [key: string]: boolean[] } = {};
+
+    daysInMonth.forEach(day => {
+      occupiedPositions[day.toISOString()] = [false, false, false];
+    });
+
+    events.sort((a, b) => {
+      const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
+      const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
+      return bDuration - aDuration || parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
+    });
+
+    events.forEach(event => {
+      const eventStart = parseISO(event.startDate);
+      const eventEnd = parseISO(event.endDate);
+      const eventDays = eachDayOfInterval({ start: eventStart, end: eventEnd });
+
+      let position = -1;
+      for (let i = 0; i < 3; i++) {
+        if (eventDays.every(day => !occupiedPositions[startOfDay(day).toISOString()][i])) {
+          position = i;
+          break;
+        }
+      }
+
+      if (position !== -1) {
+        eventDays.forEach(day => {
+          occupiedPositions[startOfDay(day).toISOString()][position] = true;
+        });
+        eventPositions[event.id] = position;
+      }
+    });
+
+    return eventPositions;
+  };
+
+  const eventPositions = calculateEventPositions([...multiDayEvents, ...events]);
+
   const getEventsForDate = (date: Date) => {
-    const multiDayEventsForDate = multiDayEvents.filter(event => {
+    const eventsForDate = [...multiDayEvents, ...events].filter(event => {
       const eventStart = parseISO(event.startDate);
       const eventEnd = parseISO(event.endDate);
       return isWithinInterval(date, { start: eventStart, end: eventEnd }) || isSameDay(date, eventStart);
     });
 
-    const singleDayEventsForDate = events.filter(event => {
-      const eventStart = parseISO(event.startDate);
-      return isSameDay(date, eventStart);
-    });
-
-    return [...multiDayEventsForDate, ...singleDayEventsForDate].sort((a, b) => {
-      const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
-      const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
-      if (aDuration !== bDuration) return bDuration - aDuration;
-      return parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
-    });
+    return eventsForDate
+      .map(event => ({
+        ...event,
+        position: eventPositions[event.id] ?? -1,
+      }))
+      .sort((a, b) => a.position - b.position);
   };
 
   return (
@@ -79,8 +118,6 @@ export function Month({ selectedDate, events, multiDayEvents }: MonthProps) {
       <div className="grid grid-cols-7 overflow-hidden border-b lg:border-b-0">
         {allCells.map(({ day, currentMonth, date }, index) => {
           const cellEvents = getEventsForDate(date);
-          const displayEvents = cellEvents.slice(0, 3);
-          const remainingEvents = cellEvents.length - 3;
 
           return (
             <div key={index} className={cn("flex flex-col gap-1 py-1.5 lg:py-2", index > 6 && "border-t", index % 7 !== 0 && "border-l")}>
@@ -94,20 +131,22 @@ export function Month({ selectedDate, events, multiDayEvents }: MonthProps) {
                 {day}
               </span>
 
-              <div className={cn("flex h-6 items-center gap-1 px-2 md:h-[86px] md:px-0", "md:grid md:grid-rows-3 md:gap-0.5", !currentMonth && "opacity-50")}>
-                {displayEvents.map(event => (
-                  <Fragment key={event.id}>
-                    <CalendarEventBadge className="hidden md:flex" event={event} cellDate={startOfDay(date)} />
-                    <BulletEvent className="flex md:hidden" variant={event.variant} />
-                  </Fragment>
-                ))}
+              <div className={cn("flex h-6 flex-col gap-1 px-2 md:h-[86px] md:gap-0.5 md:px-0", !currentMonth && "opacity-50")}>
+                {[0, 1, 2].map(position => {
+                  const event = cellEvents.find(e => e.position === position);
+                  return (
+                    <div key={position} className="flex-1">
+                      {event && <CalendarEventBadge className="hidden md:flex" event={event} cellDate={startOfDay(date)} />}
+                    </div>
+                  );
+                })}
               </div>
 
               <p className={cn("h-4.5 px-1.5 text-xs font-semibold text-t-quaternary", !currentMonth && "opacity-50")}>
-                {remainingEvents > 0 && (
+                {cellEvents.length > 3 && (
                   <>
-                    <span className="sm:hidden">+{remainingEvents}</span>
-                    <span className="hidden sm:inline">{remainingEvents} more...</span>
+                    <span className="sm:hidden">+{cellEvents.length - 3}</span>
+                    <span className="hidden sm:inline">{cellEvents.length - 3} more...</span>
                   </>
                 )}
               </p>
