@@ -5,7 +5,7 @@ import { cn } from "@/utils/cn";
 import { format } from "date-fns";
 
 const calendarMonthEventVariants = cva(
-  "flex size-2 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-full border-0 text-xs sm:mx-1 sm:size-auto sm:h-6.5 sm:rounded-md sm:border sm:px-2",
+  "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs",
   {
     variants: {
       variant: {
@@ -34,7 +34,6 @@ interface CalendarMonthEventProps extends React.HTMLAttributes<HTMLDivElement>, 
   readonly multiDay?: "first" | "middle" | "last";
   readonly eventCurrentDay?: number;
   readonly eventTotalDays?: number;
-  readonly bulletOnMobile?: boolean;
 }
 
 const CalendarMonthEvent = React.forwardRef<HTMLDivElement, CalendarMonthEventProps>(

@@ -2,6 +2,8 @@ import { isToday, parseISO, isSameDay, isWithinInterval, differenceInDays, start
 
 import { cn } from "@/utils/cn";
 import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
+import { Fragment } from "react";
+import { BulletEvent } from "@/modules/calendar/components/bullet-event";
 
 interface Event {
   id: number;
@@ -111,13 +113,17 @@ export function Month({ selectedDate, events }: MonthProps) {
 
               <div className={cn("flex h-2 gap-1 px-2 sm:h-[86px] sm:flex-col sm:px-0", !currentMonth && "opacity-50")}>
                 {displayEvents.map(event => (
-                  <CalendarMonthEvent
-                    key={event.id}
-                    title={event.title}
-                    startDate={event.startDate}
-                    variant={event.variant}
-                    multiDay={getEventPosition(event, date)}
-                  />
+                  <Fragment key={event.id}>
+                    <CalendarMonthEvent
+                      className="hidden sm:flex"
+                      title={event.title}
+                      startDate={event.startDate}
+                      variant={event.variant}
+                      multiDay={getEventPosition(event, date)}
+                    />
+
+                    <BulletEvent className="flex sm:hidden" variant={event.variant} />
+                  </Fragment>
                 ))}
               </div>
 
