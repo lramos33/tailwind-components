@@ -40,7 +40,15 @@ export function MultiDayDayEvents({ selectedDate, multiDayEvents }: MultiDayDayE
       <div className="w-16 border-b shadow-calendar"></div>
       <div className="flex flex-1 flex-col gap-1 border-l py-1">
         {multiDayEventsInDay.map(event => (
-          <CalendarEventBadge key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} eventCurrentDay={1} eventTotalDays={10} />
+          <CalendarEventBadge
+            key={event.id}
+            event={event}
+            // title={event.title}
+            // startDate={event.startDate}
+            // variant={event.variant}
+            eventCurrentDay={1}
+            eventTotalDays={10}
+          />
         ))}
       </div>
     </div>

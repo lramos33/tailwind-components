@@ -1,8 +1,9 @@
 import React from "react";
+import { format } from "date-fns";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/utils/cn";
-import { format } from "date-fns";
+import type { IEvent } from "@/modules/calendar/interfaces";
 
 const calendarEventBadgeVariants = cva(
   "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs",
@@ -28,17 +29,16 @@ const calendarEventBadgeVariants = cva(
   }
 );
 
-interface CalendarEventBadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof calendarEventBadgeVariants> {
-  readonly title: string;
-  readonly startDate: string;
+interface CalendarEventBadgeProps extends React.HTMLAttributes<HTMLDivElement>, Omit<VariantProps<typeof calendarEventBadgeVariants>, "variant"> {
+  readonly event: IEvent;
   readonly multiDay?: "first" | "middle" | "last";
   readonly eventCurrentDay?: number;
   readonly eventTotalDays?: number;
 }
 
 const CalendarEventBadge = React.forwardRef<HTMLDivElement, CalendarEventBadgeProps>(
-  ({ title, startDate, variant, multiDay, className, eventCurrentDay, eventTotalDays, ...props }, ref) => {
-    const calendarEventBadgeClasses = cn(calendarEventBadgeVariants({ variant, multiDay, className }));
+  ({ event, multiDay, className, eventCurrentDay, eventTotalDays, ...props }, ref) => {
+    const calendarEventBadgeClasses = cn(calendarEventBadgeVariants({ variant: event.variant, multiDay, className }));
 
     return (
       <div ref={ref} className={calendarEventBadgeClasses} {...props}>
@@ -49,10 +49,10 @@ const CalendarEventBadge = React.forwardRef<HTMLDivElement, CalendarEventBadgePr
                 Day {eventCurrentDay} of {eventTotalDays} •{" "}
               </span>
             )}
-            {title}
+            {event.title}
           </p>
         )}
-        {(!multiDay || multiDay === "first") && <span className="hidden sm:block">{format(new Date(startDate), "h:mm a")}</span>}
+        {(!multiDay || multiDay === "first") && <span className="hidden sm:block">{format(new Date(event.startDate), "h:mm a")}</span>}
       </div>
     );
   }

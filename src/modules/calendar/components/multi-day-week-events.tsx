@@ -56,7 +56,16 @@ export function MultiDayWeekEvents({ selectedDate, multiDayEvents }: MultiDayWee
                 position = "middle";
               }
 
-              return <CalendarEventBadge key={event.id} title={event.title} startDate={event.startDate} variant={event.variant} multiDay={position} />;
+              return (
+                <CalendarEventBadge
+                  key={event.id}
+                  event={event}
+                  // title={event.title}
+                  // startDate={event.startDate}
+                  // variant={event.variant}
+                  multiDay={position}
+                />
+              );
             })}
           </div>
         ))}

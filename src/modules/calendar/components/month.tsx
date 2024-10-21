@@ -109,9 +109,10 @@ export function Month({ selectedDate, events }: MonthProps) {
                   <Fragment key={event.id}>
                     <CalendarEventBadge
                       className="hidden sm:flex"
-                      title={event.title}
-                      startDate={event.startDate}
-                      variant={event.variant}
+                      event={event}
+                      // title={event.title}
+                      // startDate={event.startDate}
+                      // variant={event.variant}
                       multiDay={getEventPosition(event, date)}
                     />
 
