@@ -5,17 +5,11 @@ import { ScrollArea } from "@/components/scroll-area";
 import { useState, useEffect } from "react";
 import { SingleDayPicker } from "@/components/single-day-picker";
 
-interface Event {
-  id: number;
-  title: string;
-  variant: "blue" | "green" | "red" | "yellow" | "purple" | "gray";
-  startDate: string;
-  endDate: string;
-}
+import type { IEvent } from "@/modules/calendar/interfaces";
 
 interface DayProps {
   readonly selectedDate: Date;
-  readonly events: Event[];
+  readonly events: IEvent[];
   readonly onDateChange: (date: Date) => void;
 }
 
@@ -35,7 +29,7 @@ export function Day({ selectedDate, events, onDateChange }: DayProps) {
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  const getEventStyle = (event: Event, groupIndex: number, groupSize: number) => {
+  const getEventStyle = (event: IEvent, groupIndex: number, groupSize: number) => {
     const startDate = parseISO(event.startDate);
     const dayStart = new Date(selectedDate.setHours(0, 0, 0, 0));
     const eventStart = startDate < dayStart ? dayStart : startDate;
@@ -48,9 +42,9 @@ export function Day({ selectedDate, events, onDateChange }: DayProps) {
     return { top: `${top}%`, width: `${width}%`, left: `${left}%` };
   };
 
-  const groupEvents = (dayEvents: Event[]) => {
+  const groupEvents = (dayEvents: IEvent[]) => {
     const sortedEvents = dayEvents.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
-    const groups: Event[][] = [];
+    const groups: IEvent[][] = [];
 
     for (const event of sortedEvents) {
       const eventStart = parseISO(event.startDate);

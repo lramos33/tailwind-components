@@ -7,18 +7,14 @@ import { Button, ButtonGroup } from "@/components/button";
 import { ChevronLeft, ChevronRight, Columns, Grid3X3, List, Plus } from "@/components/icons";
 
 import { formatMonthRange, formatWeekRange } from "@/utils/date.helper";
-
-interface Event {
-  startDate: string;
-  endDate: string;
-}
+import type { IEvent } from "@/modules/calendar/interfaces";
 
 interface HeaderProps {
   readonly selectedDate: Date;
   readonly onChangeDate: (increment: number) => void;
   readonly setView: (view: "day" | "week" | "month") => void;
   readonly view: "day" | "week" | "month";
-  readonly events: Event[];
+  readonly events: IEvent[];
 }
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

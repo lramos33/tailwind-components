@@ -8,16 +8,11 @@ import { Month } from "@/modules/calendar/components/month";
 import { Header } from "@/modules/calendar/components/header";
 import { MultiDayWeekEvents } from "@/modules/calendar/components/multi-day-week-events";
 import { Day } from "@/modules/calendar/components/day";
+import { MultiDayDayEvents } from "@/modules/calendar/components/multi-day-day-events";
 
-interface Event {
-  id: number;
-  title: string;
-  variant: "blue" | "green" | "red" | "yellow" | "purple" | "gray";
-  startDate: string;
-  endDate: string;
-}
+import type { IEvent } from "@/modules/calendar/interfaces";
 
-const MOCK_EVENTS: Array<Event> = [
+const MOCK_EVENTS: Array<IEvent> = [
   {
     id: 1,
     title: "Meeting with John",
@@ -259,12 +254,12 @@ const MOCK_EVENTS: Array<Event> = [
 ];
 
 export default function Page() {
-  const [view, setView] = useState<"day" | "week" | "month">("day");
+  const [view, setView] = useState<"day" | "week" | "month">("month");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { singleDayEvents, multiDayEvents } = useMemo(() => {
-    const singleDay: Event[] = [];
-    const multiDay: Event[] = [];
+    const singleDay: IEvent[] = [];
+    const multiDay: IEvent[] = [];
 
     MOCK_EVENTS.forEach(event => {
       const startDate = parseISO(event.startDate);
@@ -309,6 +304,7 @@ export default function Page() {
       <Header selectedDate={selectedDate} onChangeDate={changeDate} setView={handleSetView} view={view} events={MOCK_EVENTS} />
 
       {view === "week" && <MultiDayWeekEvents selectedDate={selectedDate} multiDayEvents={multiDayEvents} />}
+      {view === "day" && <MultiDayDayEvents selectedDate={selectedDate} multiDayEvents={multiDayEvents} />}
 
       {view === "month" && <Month selectedDate={selectedDate} events={[...singleDayEvents, ...multiDayEvents]} />}
       {view === "week" && <Week selectedDate={selectedDate} events={singleDayEvents} />}

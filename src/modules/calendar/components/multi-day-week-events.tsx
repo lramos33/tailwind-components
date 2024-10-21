@@ -2,18 +2,10 @@ import { useMemo } from "react";
 import { parseISO, startOfDay, endOfDay, isSameDay, startOfWeek, endOfWeek, addDays, isWithinInterval, differenceInDays } from "date-fns";
 
 import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
-
-interface Event {
-  id: number;
-  title: string;
-  variant: "blue" | "green" | "red" | "yellow" | "purple" | "gray";
-  startDate: string;
-  endDate: string;
-}
-
+import type { IEvent } from "@/modules/calendar/interfaces";
 interface MultiDayWeekEventsProps {
   readonly selectedDate: Date;
-  readonly multiDayEvents: Event[];
+  readonly multiDayEvents: IEvent[];
 }
 
 export function MultiDayWeekEvents({ selectedDate, multiDayEvents }: MultiDayWeekEventsProps) {

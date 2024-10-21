@@ -2,18 +2,11 @@ import { startOfWeek, addDays, format, parseISO, isSameDay, differenceInMinutes,
 import { CalendarWeekEvent } from "@/modules/calendar/components/week-event";
 import { CalendarTimeline } from "@/modules/calendar/components/timeline";
 import { ScrollArea } from "@/components/scroll-area";
-
-interface Event {
-  id: number;
-  title: string;
-  variant: "blue" | "green" | "red" | "yellow" | "purple" | "gray";
-  startDate: string;
-  endDate: string;
-}
+import type { IEvent } from "@/modules/calendar/interfaces";
 
 interface WeekProps {
   readonly selectedDate: Date;
-  readonly events: Event[];
+  readonly events: IEvent[];
 }
 
 export function Week({ selectedDate, events }: WeekProps) {
@@ -21,7 +14,7 @@ export function Week({ selectedDate, events }: WeekProps) {
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  const getEventStyle = (event: Event, day: Date, groupIndex: number, groupSize: number) => {
+  const getEventStyle = (event: IEvent, day: Date, groupIndex: number, groupSize: number) => {
     const startDate = parseISO(event.startDate);
     const dayStart = new Date(day.setHours(0, 0, 0, 0));
     const eventStart = startDate < dayStart ? dayStart : startDate;
@@ -34,9 +27,9 @@ export function Week({ selectedDate, events }: WeekProps) {
     return { top: `${top}%`, width: `${width}%`, left: `${left}%` };
   };
 
-  const groupEvents = (dayEvents: Event[]) => {
+  const groupEvents = (dayEvents: IEvent[]) => {
     const sortedEvents = dayEvents.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
-    const groups: Event[][] = [];
+    const groups: IEvent[][] = [];
 
     for (const event of sortedEvents) {
       const eventStart = parseISO(event.startDate);

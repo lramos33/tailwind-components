@@ -4,18 +4,11 @@ import { cn } from "@/utils/cn";
 import { CalendarMonthEvent } from "@/modules/calendar/components/month-event";
 import { Fragment } from "react";
 import { BulletEvent } from "@/modules/calendar/components/bullet-event";
-
-interface Event {
-  id: number;
-  title: string;
-  variant: "blue" | "green" | "red" | "yellow" | "purple" | "gray";
-  startDate: string;
-  endDate: string;
-}
+import type { IEvent } from "@/modules/calendar/interfaces";
 
 interface MonthProps {
   readonly selectedDate: Date;
-  readonly events: Array<Event>;
+  readonly events: Array<IEvent>;
 }
 
 export function Month({ selectedDate, events }: MonthProps) {
@@ -67,7 +60,7 @@ export function Month({ selectedDate, events }: MonthProps) {
   };
 
   // TO DO: check this function
-  const getEventPosition = (event: Event, date: Date) => {
+  const getEventPosition = (event: IEvent, date: Date) => {
     const eventStart = startOfDay(parseISO(event.startDate));
     const eventEnd = endOfDay(parseISO(event.endDate));
     const cellDate = startOfDay(date);
