@@ -94,9 +94,7 @@ export function Month({ selectedDate, events, multiDayEvents }: MonthProps) {
                 {day}
               </span>
 
-              <div
-                className={cn("flex h-6 items-center gap-1 px-2 md:h-[86px] md:flex-col md:items-stretch md:border-0 md:px-0", !currentMonth && "opacity-50")}
-              >
+              <div className={cn("flex h-6 items-center gap-1 px-2 md:h-[86px] md:px-0", "md:grid md:grid-rows-3 md:gap-0.5", !currentMonth && "opacity-50")}>
                 {displayEvents.map(event => (
                   <Fragment key={event.id}>
                     <CalendarEventBadge className="hidden md:flex" event={event} cellDate={startOfDay(date)} />
